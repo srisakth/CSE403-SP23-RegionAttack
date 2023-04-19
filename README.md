@@ -27,4 +27,4 @@ To use git with Unity, the local repository may need to have [Git LFS](https://g
 - Kaede Yoshikawa
 - Leander Diaz-Bone
 - Yanick Schimpf
-- 
+- Srivatshan(Sri) Sakthinarayanan
