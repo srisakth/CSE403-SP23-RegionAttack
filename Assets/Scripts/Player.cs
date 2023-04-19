@@ -3,10 +3,10 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Player
 {
-	readonly int id;
-	int curScore;
+	protected internal int id;
+    protected internal Game game;
+    int curScore;
 	int[] numberPool;
-	readonly Game game;
 	public Player(int id, Game game)
 	{
 		this.id = id;
