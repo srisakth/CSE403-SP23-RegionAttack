@@ -23,7 +23,7 @@ The repository itself is a Unity project based on Unity version 2021.3.22. There
 
 To use git with Unity, the local repository may need to have [Git LFS](https://git-lfs.com/) installed and initialized. Additionally, there must be extra precautions made if modifying the included `.gitignore` and `.gitattributes` files as it may cause git to track unnecessary files or not use git LFS for large files.
 
-##Team
+## Team
 - Leander Diaz-Bone
 - Yanick Schimpf
 - Kaede Yoshikawa
