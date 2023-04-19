@@ -1,15 +1,20 @@
 ﻿using System;
+using static UnityEngine.Rendering.DebugUI;
+
 public class Game
 {
+	readonly int numberPoolSize = 4;
+	readonly int maxNumber = 12;
 	// Variables (Game Board, Players)
-	readonly Player p1;
-	readonly Player p2;
-	private (int,int)[,] board;
-	private Player curMove;
+	protected internal Player p1;
+	protected internal Player p2;
+    protected internal Player curMove;
+    protected internal (int,int)[,] board;
+	
 
     public Game(int dim)
 	{
-		p1 = new Player(1,this);
+        p1 = new Player(1,this);
 		p2 = new Player(2,this);
 		curMove = p1;
 		board = new (int,int)[dim,dim];
@@ -18,7 +23,7 @@ public class Game
 				board[i, j] = (-1,0);
 			}
 		}
-		Console.WriteLine("Game was created!");
+        Console.WriteLine("Game was created!");
 	}
 	public bool MakeMove(Player p, (int,int) position, int number) {
 		if (!IsValid(p,position, number))
@@ -27,10 +32,9 @@ public class Game
 			return false;
 		}
 		board[position.Item1, position.Item2] = (number, p.getId());
-		//Change current Score
+		p.replaceNum(number);
 		p1.setScore(ComputeScore(p1));
 		p2.setScore(ComputeScore(p2));
-		//Change current Move
 		if (p.Equals(p1))
 		{
 			curMove = p2;
@@ -55,8 +59,8 @@ public class Game
 			return null;
 		}
 	}
-	private bool IsValid(Player p, (int, int) position, int number) {
-		if (p.Equals(curMove))
+	protected internal bool IsValid(Player p, (int, int) position, int number) {
+        if (p.Equals(curMove) && p.hasNum(number))
 		{
 			return true;
 		}
@@ -65,8 +69,15 @@ public class Game
 		}
 		
 	}
-	private int ComputeScore(Player p) {
+    protected internal int ComputeScore(Player p) {
 		return 0;
+	}
+
+	public int getNumberPoolSize() {
+		return numberPoolSize;
+	}
+	public int getMaxNumber() {
+		return maxNumber;
 	}
 }
 
