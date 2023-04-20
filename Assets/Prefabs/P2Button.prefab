@@ -138,8 +138,6 @@ MonoBehaviour:
   _isP1Side: 0
   _isP1Num: 0
   _num: 0
-  _x: 0
-  _y: 0
   _text: {fileID: 1201256559404461893}
 --- !u!1 &1201256559404461895
 GameObject:
@@ -234,8 +232,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -1,37 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using static UnityEngine.Rendering.DebugUI;
 
 public class Player
 {
 	protected internal int id;
-    protected internal Game game;
     int curScore;
-	int[] numberPool;
-	public Player(int id, Game game)
+	List<int> numberPool;
+
+	public Player(int id)
 	{
 		this.id = id;
-		this.game = game;
 		curScore = 0;
-		CreateNumberPool();
+		numberPool = new List<int>();
 	}
 	
-	private void CreateNumberPool() {
-        Random rnd = new Random();
-        numberPool = new int[game.getNumberPoolSize()];
-		for (int i = 0; i < game.getNumberPoolSize(); i++) {
-			numberPool[i] = rnd.Next(1, game.getMaxNumber() + 1);
-		}
-	}
     public bool hasNum(int number)
     {
-        int pos = Array.IndexOf(numberPool, number);
-        return pos >= 0;
+        return numberPool.Contains(number);
     }
-    public void replaceNum(int number) {
-        Random rnd = new Random();
-        int pos = Array.IndexOf(numberPool, number);
-        if (pos < 0) Console.WriteLine("Error: number is not contained in number pool!");
-        numberPool[pos] = rnd.Next(1, game.getMaxNumber() + 1);
+
+    public void addNum(int number)
+    {
+        numberPool.Add(number);
+    }
+
+    public void removeNum(int number) { numberPool.Remove(number);}
+
+    public void replaceNum(int idx, int number) {
+        if (idx >= numberPool.Count)
+            Console.Error.WriteLine("Invalid Index");
+        else
+            numberPool[idx] = number;
     }
     public int getId()
     {
