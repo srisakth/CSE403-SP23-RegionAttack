@@ -11,20 +11,15 @@ public class GridManager : MonoBehaviour
     // Prefabs for the tiles
     public Tile _p1TilePrefab, _p2TilePrefab;
 
-    private Tile[,] _tiles;
-
     // Arbitrary constants
     // Smaller screen edge : board ratio
-    float _boardRatio = 0.9f;
+    float _boardRatio = 0.8f;
     // Cell : spacing ratio
     float _spaceRatio = 0.1f;
 
 
     private void Start()
     {
-        // Store the tiles in a 2D array to access later
-        _tiles = new Tile[_size, _size];
-
         // Make the grid nice
         InitializeGrid();
 
@@ -40,7 +35,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-    // Helper function to return 
+    // Helper function to scale and initialize the canvas for the tiles
     void InitializeGrid()
     {
         // Use the screen size to determine a nice square to use
@@ -67,24 +62,24 @@ public class GridManager : MonoBehaviour
         grid.cellSize = Vector2.one * cellSize;
         grid.spacing = Vector2.one * spaceSize;
 
+        // Since we want _size tiles for each column/row, set the constraint count
         grid.constraintCount = _size;
     }
 
-
+    // Helper function to instantiate the tile prefabs
     void PopulateGrid()
     {
+        Tile spawned;
         for (int i = 0; i < _size; i++)
         {
             for (int j = 0; j < _size; j++)
             {
                 bool isP1 = IsP1Side(i, j);
-                _tiles[i, j] = isP1 ? Instantiate(_p1TilePrefab) : Instantiate(_p2TilePrefab);
-                _tiles[i, j].name = $"tile{i}-{j}";
-                _tiles[i, j].transform.SetParent(_canvas.transform, false);
-                _tiles[i, j].Init(isP1, i, j);
+                spawned = isP1 ? Instantiate(_p1TilePrefab) : Instantiate(_p2TilePrefab);
+                spawned.name = $"tile{i}-{j}";
+                spawned.transform.SetParent(_canvas.transform, false);
+                spawned.Init(isP1, i, j);
             }
         }
-
-        
     }
 }

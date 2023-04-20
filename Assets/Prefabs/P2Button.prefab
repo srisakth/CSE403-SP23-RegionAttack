@@ -135,10 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71627cd9905fa8b479cd7944a3dfedb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _p1Color: {r: 0.7396226, g: 0.93490565, b: 1, a: 1}
-  _p2Color: {r: 1, g: 0.79597265, b: 0.7411765, a: 1}
-  _renderer: {fileID: 0}
-  _highlight: {fileID: 0}
+  _isP1Side: 0
+  _isP1Num: 0
+  _num: 0
+  _x: 0
+  _y: 0
+  _text: {fileID: 1201256559404461893}
 --- !u!1 &1201256559404461895
 GameObject:
   m_ObjectHideFlags: 0

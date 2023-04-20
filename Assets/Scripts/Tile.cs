@@ -11,12 +11,13 @@ public class Tile : MonoBehaviour
     public bool _isP1Num;
     public int _num, _x, _y;
 
-    private Text _text;
+    public TMP_Text _text;
 
     public void Init(bool isP1, int x, int y)
     {
         _isP1Side = isP1;
         _num = 0;
+        _text.text = "";
         _x = x;
         _y = y;
     }
