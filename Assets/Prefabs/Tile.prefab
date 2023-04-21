@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 3120561797412201775}
   - component: {fileID: 7752633074901897410}
   m_Layer: 5
-  m_Name: P1Button
+  m_Name: Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.82452834, g: 0.97884053, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.8235295, g: 0.9803922, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.89056605, g: 0.99005145, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.922, g: 0.9898261, b: 1, a: 1}
     m_PressedColor: {r: 0.5600569, g: 0.833717, b: 0.8679245, a: 1}
     m_SelectedColor: {r: 0.89019614, g: 0.98823535, b: 1, a: 1}
     m_DisabledColor: {r: 0.25218937, g: 0.39838612, b: 0.41509432, a: 0.5019608}
@@ -270,7 +270,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71627cd9905fa8b479cd7944a3dfedb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isP1Side: 0
-  _isP1Num: 0
+  _isP1: 0
   _num: 0
   _text: {fileID: 3120561796906991411}
+  _button: {fileID: 3120561797412201775}
+  _p1ColorBlock:
+    m_NormalColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.75, b: 0.75, a: 1}
+    m_PressedColor: {r: 0.75, g: 0.1875, b: 0.1875, a: 1}
+    m_SelectedColor: {r: 1, g: 0.7490196, b: 0.7490196, a: 1}
+    m_DisabledColor: {r: 0.6, g: 0.15078533, b: 0.15078533, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 1
+  _p2ColorBlock:
+    m_NormalColor: {r: 0.5019608, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.7486911, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.18556698, g: 0.75, b: 0.75, a: 1}
+    m_SelectedColor: {r: 0.7490196, g: 1, b: 1, a: 0}
+    m_DisabledColor: {r: 0.1484536, g: 0.6, b: 0.6, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 1

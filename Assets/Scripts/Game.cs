@@ -26,7 +26,8 @@ public class Game
 	{
         p1 = new Player(1);
 		p2 = new Player(2);
-		isP1Turn = true;
+
+		// Initialize the board
 		board = new(int, bool)[dim,dim];
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
@@ -34,11 +35,20 @@ public class Game
 			}
 		}
 
+		// Add the initial hand
 		for (int i = 0; i < initPoolSize; i++)
 		{
 			p1.addNum(RND.Next(1, maxNumber + 1));
 			p2.addNum(RND.Next(1, maxNumber + 1));
 		}
+
+		// Decide which player is playing first
+		isP1Turn = RND.Next(0, 2) == 0;
+
+		if (isP1Turn)
+            p1.addNum(RND.Next(1, maxNumber + 1));
+		else
+			p2.addNum(RND.Next(1, maxNumber + 1));
 
         Console.WriteLine("Game was created!");
 	}
