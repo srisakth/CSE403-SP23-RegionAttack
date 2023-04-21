@@ -22,7 +22,7 @@ public class Game
     private Random RND = new Random();
 
 
-    public Game(int dim)
+    public Game(int dim, bool _isOpponentAI)
 	{
         p1 = new Player(1);
 		p2 = new Player(2);
