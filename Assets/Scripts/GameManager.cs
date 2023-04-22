@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     // Options
     bool _isOpponentAI = false;
-    int _gridDim = 6;
+    int _dim = 6;
 
 
     // Option possibilities
@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     // Game objects
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;
+    public PopUp _popup;
 
     private Tile _numTile, _boardTile;
 
@@ -32,10 +33,12 @@ public class GameManager : MonoBehaviour
     {
         // Wipe out any previous stuff
         _gridManager.Clear();
-        _gridManager.Initialize();
 
         // Make a new game
-        _game = new Game(_gridDim, _isOpponentAI);
+        _game = new Game(_dim, _isOpponentAI);
+
+        // Use the game 
+        _gridManager.Initialize(_dim, _game.board);
 
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
@@ -46,6 +49,7 @@ public class GameManager : MonoBehaviour
         print("STOP!");
         _p1Hand.ClearHand();
         _p2Hand.ClearHand();
+        _popup.StartDisplay(_game.TerminateGame());
     }
 
     void DisplayHand(HandManager hand, Player player)
@@ -65,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     public void SetDimension(int option)
     {
-        _gridDim = DimOptions[option];
+        _dim = DimOptions[option];
     }
 
     // Keeps track of the position within the grid
@@ -96,6 +100,9 @@ public class GameManager : MonoBehaviour
             // Update the board
             _gridManager.UpdateGrid(isP1Turn, _boardTile._position, _numTile._num);
 
+        } else
+        {
+            _popup.StartDisplay("Invalid Move!");
         }
         _boardTile = null;
         _numTile = null;

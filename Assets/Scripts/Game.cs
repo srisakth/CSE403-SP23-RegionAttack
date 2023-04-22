@@ -7,6 +7,7 @@ public class Game
 {
 	int initPoolSize = 4;
 	int maxNumber = 12;
+	int _dim;
 
 	// Variables (Game Board, Players)
 	protected internal Player p1;
@@ -24,11 +25,13 @@ public class Game
         p1 = new Player(1);
 		p2 = new Player(2);
 
+		_dim = dim;
+
 		// Initialize the board
 		board = new(int, bool)[dim,dim];
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
-				board[i, j] = (0, true);
+				board[i, j] = (0, IsP1Side(i, j));
 			}
 		}
 
@@ -95,7 +98,7 @@ public class Game
 		}
 	}
 	protected internal bool IsValid((int, int) position, int number) {
-		return true;
+		return !(board[position.Item1, position.Item2].Item2 ^ isP1Turn);
     }
     protected internal int ComputeScore(bool isP1) {
 		return 0;
@@ -107,5 +110,14 @@ public class Game
 	public int getMaxNumber() {
 		return maxNumber;
 	}
+
+	// Helper functions
+
+    // Helper function to return whether the grid at that coordinate is player 1's grid
+    bool IsP1Side(int i, int j)
+    {
+        // For now, we can just set the lower half as P1's but we can eventually have different configurations
+        return j < _dim / 2;
+    }
 }
 

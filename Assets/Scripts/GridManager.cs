@@ -44,20 +44,23 @@ public class GridManager : MonoBehaviour
         Debug.Assert(_gameManager != null);
     }
 
-    public void Initialize()
+    // Given the dimension and the internal representation of the board,
+    // extracts the necessary information and initializes the board
+    public void Initialize(int dimension, (int, bool)[,] board)
     {
+        _dimension = dimension;
         // Make the grid nice
         InitializeGrid();
 
         // Populate the grid
-        PopulateGrid();
+        PopulateGrid(board);
     }
 
     public void Clear()
     {
         if (_tiles == null)
             return;
-        // Remove the tiles in case we choose a different grid
+        // Remove the tiles
         foreach (Tile tile in _tiles)
         {
             GameObject.Destroy(tile.gameObject);
@@ -67,30 +70,12 @@ public class GridManager : MonoBehaviour
     // Sets the tile at the given position to hold the given number
     public void UpdateGrid(bool isP1Num, (int, int) position, int number)
     {
-        if (IsInBound(position))
-        {
-            _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
-        }
-        else
-            Console.Error.WriteLine("Invalid position");
-    }
-
-    // Helper function to determine whether the given position is valid
-    bool IsInBound((int, int) position)
-    {
-        return position.Item1 >= 0 && position.Item1 < _dimension && position.Item2 >= 0 && position.Item2 < _dimension;
+        _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
     }
 
     public void SetDimension(int option)
     {
         _dimension = GameManager.DimOptions[option];
-    }
-
-    // Helper function to return whether the grid at that coordinate is player 1's grid
-    bool IsP1Side(int i, int j)
-    {
-        // For now, we can just set the upper half as P1's but we can eventually have different configurations
-        return j < _dimension / 2;
     }
 
 
@@ -126,7 +111,7 @@ public class GridManager : MonoBehaviour
     }
 
     // Helper function to instantiate the tile prefabs
-    void PopulateGrid()
+    void PopulateGrid((int, bool)[,] board)
     {
         // Initialize the tiles array
         _tiles = new Tile[_dimension, _dimension];
@@ -135,8 +120,8 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < _dimension; j++)
             {
-                bool isP1 = IsP1Side(i, j);
                 (int, int) pos = (i, j);
+                bool isP1 = board[i, j].Item2;
                 Tile tile = Instantiate(_tilePrefab);
                 tile.name = $"tile{i}-{j}";
                 tile.transform.SetParent(_canvas.transform, false);
