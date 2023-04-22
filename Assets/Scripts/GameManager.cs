@@ -14,9 +14,11 @@ public class GameManager : MonoBehaviour
     Game _game;
 
     // Options
-    bool _isOpponentAI;
-    int _gridDim;
+    bool _isOpponentAI = false;
+    int _gridDim = 6;
 
+
+    // Option possibilities
     public static readonly int[] DimOptions = {4, 6, 8};
 
 
@@ -24,9 +26,7 @@ public class GameManager : MonoBehaviour
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;
 
-    public (int, int) _position;
-    readonly (int, int) nullPosition = (-1, -1);
-    public int _number;
+    private Tile _numTile, _boardTile;
 
     public void StartGame()
     {
@@ -35,14 +35,17 @@ public class GameManager : MonoBehaviour
         _gridManager.Initialize();
 
         // Make a new game
-        _game = new Game(_gridDim);
+        _game = new Game(_gridDim, _isOpponentAI);
 
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
+    }
 
-        // Set the position and number to "null"
-        _position = nullPosition;
-        _number = -1;
+    public void EndGame()
+    {
+        print("STOP!");
+        _p1Hand.ClearHand();
+        _p2Hand.ClearHand();
     }
 
     void DisplayHand(HandManager hand, Player player)
@@ -66,39 +69,35 @@ public class GameManager : MonoBehaviour
     }
 
     // Keeps track of the position within the grid
-    public void SetPosition((int, int) position)
+    public void SetPosition(Tile tile)
     {
-        _position = position;
-        if (_number != -1)
+        _boardTile = tile;
+        if (_numTile != null)
             MakeMove();
     }
 
-    public void SetNumber(int number)
+    public void SetNumber(Tile tile)
     {
-        _number = number;
+        _numTile = tile;
+        if (_boardTile != null)
+            MakeMove();
     }
 
     private void MakeMove()
     {
-        Debug.Assert(_position != nullPosition && _number > 0);
+        Debug.Assert(_boardTile != null && _numTile != null);
         bool isP1Turn = _game.isP1Turn;
-        if (_game.MakeMove(_position, _number))
+        int num = _game.MakeMove(_boardTile._position, _numTile._num);
+        if (num != 0)
         {
             // The move is valid: delete the hand and redisplay the hand for the other player
-            if (isP1Turn)
-            {
-                _p1Hand.RemoveNumber(_number);
-                DisplayHand(_p2Hand, _game.p2);
-            }
-            else
-            {
-                _p2Hand.RemoveNumber(_number);
-                DisplayHand(_p1Hand, _game.p1);
-            }
+            DisplayHand(_p1Hand, _game.p1);
+            DisplayHand(_p2Hand, _game.p2);
             // Update the board
-            _gridManager.UpdateGrid(isP1Turn, _position, _number);
+            _gridManager.UpdateGrid(isP1Turn, _boardTile._position, _numTile._num);
+
         }
-        _position = nullPosition;
-        _number = -1;
+        _boardTile = null;
+        _numTile = null;
     }
 }

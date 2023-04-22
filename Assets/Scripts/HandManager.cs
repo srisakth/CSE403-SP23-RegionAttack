@@ -19,26 +19,26 @@ public class HandManager : MonoBehaviour
         {
             GameObject.Destroy(tile.gameObject);
         }
+        _hand.Clear();
     }
 
     public void AddNumber(int number)
     {
         Tile tile = Instantiate(_tilePrefab);
 
-        tile.Init(_isP1, (_hand.Count, -1));
+        tile.Init(_isP1, (-1, -1));
         tile.SetNum(_isP1, number);
-        tile._button.onClick.AddListener(() => { _gameManager.SetNumber(number); });
+        tile._button.onClick.AddListener(() => { _gameManager.SetNumber(tile); });
         tile.transform.SetParent(_parent.transform);
         _hand.Add(tile);
     }
 
     // Removes the number at the given index and 
-    public void RemoveNumber(int number)
+    public void RemoveNumber(Tile tile)
     {
-        int idx = _hand.FindIndex(tile => tile._num == number);
-        Tile num = _hand[idx];
+        int idx = _hand.IndexOf(tile);
         _hand.RemoveAt(idx);
-        GameObject.Destroy(num);
+        GameObject.Destroy(tile);
 
     }
 }

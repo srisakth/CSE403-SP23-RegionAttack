@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour
     public float _timeLimit;
     private float _timeElapsed;
     private bool _enabled;
+    public bool _showMin;
 
     public TMP_Text _displayText;
 
@@ -40,7 +41,7 @@ public class Timer : MonoBehaviour
             int remaining = Mathf.CeilToInt(_timeLimit - _timeElapsed);
             int minute = remaining / 60;
             int second = remaining % 60;
-            _displayText.text = $"{minute:D2} : {second:D2}";
+            _displayText.text = _showMin ? $"{minute:D2} : {second:D2}" : $"{second}";
 
             if (_timeElapsed > _timeLimit) 
             {

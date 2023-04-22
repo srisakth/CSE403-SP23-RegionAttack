@@ -273,10 +273,10 @@ RectTransform:
   m_Father: {fileID: 1739663721}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 902.1047, y: 840.04}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &169032067
 MonoBehaviour:
@@ -540,7 +540,6 @@ MonoBehaviour:
   _gridManager: {fileID: 1739663722}
   _p1Hand: {fileID: 106990267}
   _p2Hand: {fileID: 495822007}
-  _number: 0
 --- !u!4 &615388055
 Transform:
   m_ObjectHideFlags: 0
@@ -2411,7 +2410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 077d2f4bbe4f7e34ba80f1af9da3f6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dimension: 8
+  _dimension: 6
   _canvas: {fileID: 169032065}
   _gameManager: {fileID: 615388054}
   _tilePrefab: {fileID: 7752633074901897410, guid: bea32b53150de5144816231c27b83492, type: 3}
@@ -3325,6 +3324,10 @@ PrefabInstance:
       value: Timer
       objectReference: {fileID: 0}
     - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
+      propertyPath: _showMin
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
       propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -3333,8 +3336,24 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
+      propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 615388054}
+    - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
       propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
+      propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EndGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
+      propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242438457849540892, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
+      propertyPath: _timeUpEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6242438457849540895, guid: d421c2adbd2e99f4484036d8730a5eb8, type: 3}
       propertyPath: m_Pivot.x
@@ -3429,6 +3448,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1739663721}
     m_Modifications:
+    - target: {fileID: 6062568720193940584, guid: 7aacf25f7aa033143bb19b041ef005b5, type: 3}
+      propertyPath: _isP1
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6062568720193940584, guid: 7aacf25f7aa033143bb19b041ef005b5, type: 3}
       propertyPath: _gameManager
       value: 

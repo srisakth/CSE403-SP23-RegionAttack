@@ -1,5 +1,4 @@
 ﻿using System;
-using static UnityEngine.Rendering.DebugUI;
 
 /* 
  * The Game class is an abstraction of the game state.  
@@ -18,9 +17,7 @@ public class Game
 	// If the number is 0, then the latter boolean does not matter.
     protected internal (int, bool)[,] board;
 
-	// Random number generator for hand generation
-    private Random RND = new Random();
-
+	private Random random = new Random();
 
     public Game(int dim, bool _isOpponentAI)
 	{
@@ -38,31 +35,42 @@ public class Game
 		// Add the initial hand
 		for (int i = 0; i < initPoolSize; i++)
 		{
-			p1.addNum(RND.Next(1, maxNumber + 1));
-			p2.addNum(RND.Next(1, maxNumber + 1));
+			p1.addNum(random.Next(1, maxNumber + 1));
+			p2.addNum(random.Next(1, maxNumber + 1));
 		}
 
 		// Decide which player is playing first
-		isP1Turn = RND.Next(0, 2) == 0;
+		isP1Turn = random.Next(0, 2) == 0;
 
 		if (isP1Turn)
-            p1.addNum(RND.Next(1, maxNumber + 1));
+            p1.addNum(random.Next(1, maxNumber + 1));
 		else
-			p2.addNum(RND.Next(1, maxNumber + 1));
-
-        Console.WriteLine("Game was created!");
-	}
+			p2.addNum(random.Next(1, maxNumber + 1));
+    }
 
 	// Tries to make a move for the current player with the given number.
-	// If it is invalid, then returns false.
-	// If it is valid, then it updates the internal board and score accordingly
-	public bool MakeMove((int,int) position, int number) {
+	// If it is invalid, then returns 0.
+	// If it is valid, then it updates the internal board and score accordingly and return the new number for the next player.
+
+	public int MakeMove((int,int) position, int number) {
 		if (!IsValid(position, number))
 		{
-			Console.WriteLine("This move is not valid!");
-			return false;
+			return 0;
 		}
 		board[position.Item1, position.Item2] = (number, isP1Turn);
+
+		int newNum = random.Next(1, maxNumber + 1);
+		// Remove the used tile and add a new tile
+		if (isP1Turn)
+		{
+			p1.removeNum(number);
+			p2.addNum(random.Next(1, maxNumber + 1));
+		}
+		else
+		{
+			p2.removeNum(number);
+			p1.addNum(random.Next(1, maxNumber + 1));
+		}
 		
 		// Update the scores
 		p1.setScore(ComputeScore(true));
@@ -71,7 +79,7 @@ public class Game
 		// Switch turns
 		isP1Turn = !isP1Turn;
 
-		return true;
+		return newNum;
 	}
 	public String TerminateGame() {
 		if (p1.getScore() > p2.getScore())

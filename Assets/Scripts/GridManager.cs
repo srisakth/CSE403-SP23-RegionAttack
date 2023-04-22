@@ -136,11 +136,13 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j < _dimension; j++)
             {
                 bool isP1 = IsP1Side(i, j);
-                _tiles[i, j] = Instantiate(_tilePrefab);
-                _tiles[i, j].name = $"tile{i}-{j}";
-                _tiles[i, j].transform.SetParent(_canvas.transform, false);
-                _tiles[i, j]._button.onClick.AddListener(() => { _gameManager.SetPosition((i, j)); });
-                _tiles[i, j].Init(isP1, (i, j));
+                (int, int) pos = (i, j);
+                Tile tile = Instantiate(_tilePrefab);
+                tile.name = $"tile{i}-{j}";
+                tile.transform.SetParent(_canvas.transform, false);
+                tile._button.onClick.AddListener(() => { _gameManager.SetPosition(tile); });
+                tile.Init(isP1, pos);
+                _tiles[i, j] = tile;
             }
         }
     }
