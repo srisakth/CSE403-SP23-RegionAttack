@@ -5,23 +5,28 @@ using TMPro;
 
 public class PopUp : MonoBehaviour
 {
-    public float _displayDuration = 1;
-
     public TMP_Text _text;
 
-    public void StartDisplay(string message)
+    private WaitForSeconds _wait = new WaitForSeconds(1);
+
+    public void StartDisplay(bool hide, string message)
     {
         _text.text = message;
         gameObject.SetActive(true);
-        StartCoroutine(Display());
+        if (hide)
+            StartCoroutine(Display());
+    }
+
+    public void StartDisplay(string message) { StartDisplay(true, message); }
+
+    public void ChangeDuration(float duration)
+    {
+        _wait = new WaitForSeconds(duration);
     }
 
     IEnumerator Display()
     {
-        for (float t = 0; t < _displayDuration; t += Time.deltaTime)
-        {
-            yield return null;
-        }
+        yield return _wait;
         gameObject.SetActive(false);
     }
 }
