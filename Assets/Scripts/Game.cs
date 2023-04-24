@@ -1,5 +1,4 @@
 ﻿using System;
-using static UnityEngine.Rendering.DebugUI;
 
 /* 
  * The Game class is an abstraction of the game state.  
@@ -8,6 +7,7 @@ public class Game
 {
 	int initPoolSize = 4;
 	int maxNumber = 12;
+	int _dim;
 
 	// Variables (Game Board, Players)
 	protected internal Player p1;
@@ -16,51 +16,71 @@ public class Game
 
 	// The board stores (1) the number stored in the board and (2) whether that number is P1's number.
 	// If the number is 0, then the latter boolean does not matter.
-    protected internal (int, bool)[,] board;
+	protected internal (int, bool)[,] board;
 
-	// Random number generator for hand generation
-    private Random RND = new Random();
+	private Random random = new Random();
 
-
-    public Game(int dim, bool _isOpponentAI)
+	public Game(int dim, bool _isOpponentAI)
 	{
-        p1 = new Player(1);
+		p1 = new Player(1);
 		if (_isOpponentAI)
 		{
 			p2 = new ComputerPlayer(2);
 		}
 		else {
-            p2 = new Player(2);
-        }
-		
+			p2 = new Player(2);
+		}
+
 		isP1Turn = true;
-		board = new(int, bool)[dim,dim];
+
+		_dim = dim;
+		board = new (int, bool)[dim, dim];
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
-				board[i, j] = (0, true);
+				board[i, j] = (0, IsP1Side((i, j)));
 			}
 		}
 
+		// Add the initial hand
 		for (int i = 0; i < initPoolSize; i++)
 		{
-			p1.addNum(RND.Next(1, maxNumber + 1));
-			p2.addNum(RND.Next(1, maxNumber + 1));
+			p1.addNum(random.Next(1, maxNumber + 1));
+			p2.addNum(random.Next(1, maxNumber + 1));
 		}
 
-        Console.WriteLine("Game was created!");
+		// Decide which player is playing first
+		isP1Turn = random.Next(0, 2) == 0;
+
+		if (isP1Turn)
+			p1.addNum(random.Next(1, maxNumber + 1));
+		else
+			p2.addNum(random.Next(1, maxNumber + 1));
 	}
 
 	// Tries to make a move for the current player with the given number.
-	// If it is invalid, then returns false.
-	// If it is valid, then it returns true and updates internal representation accordingly
-	public bool MakeMove((int,int) position, int number) {
+	// If it is invalid, then returns 0.
+	// If it is valid, then it updates the internal board and score accordingly and return the new number for the next player.
+
+	public int MakeMove((int, int) position, int number) {
 		if (!IsValid(position, number))
 		{
-			Console.WriteLine("This move is not valid!");
-			return false;
+			return 0;
 		}
 		board[position.Item1, position.Item2] = (number, isP1Turn);
-		
+
+		int newNum = random.Next(1, maxNumber + 1);
+		// Remove the used tile and add a new tile
+		if (isP1Turn)
+		{
+			p1.removeNum(number);
+			p2.addNum(random.Next(1, maxNumber + 1));
+		}
+		else
+		{
+			p2.removeNum(number);
+			p1.addNum(random.Next(1, maxNumber + 1));
+		}
+
 		// Update the scores
 		p1.setScore(ComputeScore(true));
 		p2.setScore(ComputeScore(false));
@@ -68,7 +88,7 @@ public class Game
 		// Switch turns
 		isP1Turn = !isP1Turn;
 
-		return true;
+		return newNum;
 	}
 	public String TerminateGame() {
 		if (p1.getScore() > p2.getScore())
@@ -83,41 +103,107 @@ public class Game
 			return "Tie!";
 		}
 	}
+
 	public bool isPrime(int number) {
+		int[] sprimes = new int[] { 2, 3, 5, 7, 11 };
+		return Array.Exists(sprimes, element => element == number);
+	}
+	public bool isDivMul((int, int) position, int number)
+	{
+		if (validPosition(position))
+		{
+			return number % board[position.Item1, position.Item2].Item1 == 0 || number % board[position.Item1, position.Item2].Item1 == 0;
+		}
 		return false;
 	}
 	private bool isCompatible((int, int) position, int number) {
-		if (board[position.Item1, position.Item2].Item2 != isP1Turn)
-		{
-			return true;
-		}
-		if (position.Item1 >= 0 && position.Item1 < board.Length && position.Item2 >= 0 && position.Item2 < board.Length)
-		{
-			return number % board[position.Item1,position.Item2].Item1 == 0 || number % board[position.Item1, position.Item2].Item1 == 0;
-		}
+		if (board[position.Item1, position.Item2].Item2 != isP1Turn) return true;
+		if (validPosition(position) && !isDivMul(position, number)) return false;
 		return true;
 	}
 	protected internal bool IsValid((int, int) position, int number) {
+		//Check current value of cell: 
 		//Oponent larger number
 		if (board[position.Item1, position.Item2].Item1 >= number && board[position.Item1, position.Item2].Item2 != isP1Turn) return false;
-        //Check prime rule
-        if (isPrime(number)) {
-
-		}
+		//Check conflict with 4 adjacent numbers
 		bool compt1 = isCompatible((position.Item1 - 1, position.Item2), number);
-        bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
-        bool compt3 = isCompatible((position.Item1 + 1, position.Item2), number);
-        bool compt4 = isCompatible((position.Item1, position.Item2 + 1), number);
+		bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
+		bool compt3 = isCompatible((position.Item1 + 1, position.Item2), number);
+		bool compt4 = isCompatible((position.Item1, position.Item2 + 1), number);
 		if (!(compt1 && compt2 && compt3 && compt4)) return false;
+		//Check prime rule
+		bool divmul1 = isDivMul((position.Item1 - 1, position.Item2), number);
+		bool divmul2 = isDivMul((position.Item1, position.Item2 - 1), number);
+		bool divmul3 = isDivMul((position.Item1 + 1, position.Item2), number);
+		bool divmul4 = isDivMul((position.Item1, position.Item2 + 1), number);
+		if (divmul1 || divmul2 || divmul3 || divmul4) return true;
+		if (isPrime(number) && IsP1Side(position)) return true;
 
-        if (isPrime(number) ){
-			return true;
-        }
-        return true;
-    }
-    protected internal int ComputeScore(bool isP1) {
-		return 0;
+		return false;
 	}
+	protected internal void markRegion((int, int) start, bool isP1, bool[,] check, bool[,] curReg) {
+		if (!validPosition(start)) return;
+		if (!check[start.Item1,start.Item2] && board[start.Item1, start.Item2].Item2 == isP1) {
+			check[start.Item1, start.Item2] = true;
+			curReg[start.Item1, start.Item2] = true;
+            markRegion((start.Item1-1, start.Item2), isP1, check, curReg);
+            markRegion((start.Item1, start.Item2-1), isP1, check, curReg);
+            markRegion((start.Item1+1, start.Item2), isP1, check, curReg);
+            markRegion((start.Item1, start.Item2+1), isP1, check, curReg);
+        }
+	}
+	protected internal bool checkSquare(bool[,] curReg, (int,int) botRightCorner,int size) {
+		if (!(botRightCorner.Item1 - size >= 0 && botRightCorner.Item1 >= 0)) return false; 
+		for (int i = 0; i < size; i++) {
+			if (!(curReg[botRightCorner.Item1 - i, botRightCorner.Item2] && curReg[botRightCorner.Item1, botRightCorner.Item2 - i])) return false;
+            if (!(curReg[botRightCorner.Item1 - i, botRightCorner.Item2-size] && curReg[botRightCorner.Item1-size, botRightCorner.Item2 - i])) return false;
+        }
+		return true;
+	}
+	protected internal void fillRegion(bool[,] curReg) {
+        for (int i = _dim-1; i >= 0; i--){
+            for (int j = _dim-1; j >= 0; j--){
+				if (curReg[i, j]) {
+					int l = 3;
+					while (checkSquare(curReg, (i, j), l++)) {
+						for (int i2 = i-1; i2 > i-l; i2--) {
+                            for (int j2 = i - 1; j2 > j - l; j2--){
+								curReg[i2, j2] = true;
+                            }
+                        }
+					}
+				}
+            }
+        }
+    }
+	protected internal int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
+	{
+		int regSize = 0;
+        bool[,] curReg = new bool[_dim, _dim];
+		markRegion(position, isP1, check, curReg);
+		fillRegion(curReg);
+        for (int i = 0; i < _dim; i++){
+            for (int j = 0; j < _dim; j++){
+				if (curReg[i, j]) regSize++;
+            }
+        }
+        return regSize;
+	}
+    protected internal int ComputeScore(bool isP1)
+    {
+		int maxReg = 0;
+		bool[,] check = new bool[_dim,_dim];
+		for (int i = 0; i < _dim; i++) {
+			for (int j = 0; j < _dim; j++) {
+				if (!check[i, j] && board[i,j].Item2 == isP1) {
+					maxReg = Math.Max(maxReg, ComputeRegionSize((i,j), isP1, check));
+				}
+				check[i, j] = true;
+			}
+		}
+        return maxReg;
+    }
+
 
 	public int getNumberPoolSize() {
 		return initPoolSize;
@@ -125,5 +211,16 @@ public class Game
 	public int getMaxNumber() {
 		return maxNumber;
 	}
-}
 
+	// Helper functions
+	bool validPosition((int, int) position) {
+		return position.Item1 >= 0 && position.Item1 < _dim && position.Item2 >= 0 && position.Item2 < _dim;
+	}
+	// Helper function to return whether the grid at that coordinate is player 1's grid
+	bool IsP1Side((int, int) position)
+	{
+		// For now, we can just set the lower half as P1's but we can eventually have different configurations
+		return position.Item2 < _dim / 2;
+	}
+	
+}

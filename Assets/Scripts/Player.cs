@@ -6,7 +6,7 @@ public class Player
 {
 	protected internal int id;
     int curScore;
-	List<int> numberPool;
+	public List<int> numberPool;
 
 	public Player(int id)
 	{
@@ -23,9 +23,12 @@ public class Player
     public void addNum(int number)
     {
         numberPool.Add(number);
+        numberPool.Sort();
     }
 
-    public void removeNum(int number) { numberPool.Remove(number);}
+    public void removeNum(int number) {
+        numberPool.Remove(number);
+    }
 
     public void replaceNum(int idx, int number) {
         if (idx >= numberPool.Count)

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 /* 
@@ -17,7 +18,7 @@ public class GridManager : MonoBehaviour
     public GameManager _gameManager;
 
     // Prefabs for the tiles
-    public Tile _p1TilePrefab, _p2TilePrefab;
+    public Tile _tilePrefab;
 
     // Arbitrary constants
     // Smaller screen edge : board ratio
@@ -31,21 +32,35 @@ public class GridManager : MonoBehaviour
 
     private void Start()
     {
-        
+        // Initial sanity check statements
+        // Does the given tile prefab contain Button and Tile?
+        Debug.Assert(_tilePrefab.GetComponent<Button>() != null);
+        Debug.Assert(_tilePrefab.GetComponent<Tile>() != null);
+
+        // Do we have a canvas?
+        Debug.Assert( _canvas != null );
+
+        // Do we know the GameManager?
+        Debug.Assert(_gameManager != null);
     }
 
-    public void Initialize()
+    // Given the dimension and the internal representation of the board,
+    // extracts the necessary information and initializes the board
+    public void Initialize(int dimension, (int, bool)[,] board)
     {
+        _dimension = dimension;
         // Make the grid nice
         InitializeGrid();
 
         // Populate the grid
-        PopulateGrid();
+        PopulateGrid(board);
     }
 
-    public void Reset()
+    public void Clear()
     {
-        // Remove the tiles in case we choose a different grid
+        if (_tiles == null)
+            return;
+        // Remove the tiles
         foreach (Tile tile in _tiles)
         {
             GameObject.Destroy(tile.gameObject);
@@ -55,30 +70,12 @@ public class GridManager : MonoBehaviour
     // Sets the tile at the given position to hold the given number
     public void UpdateGrid(bool isP1Num, (int, int) position, int number)
     {
-        if (IsInBound(position))
-        {
-            _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
-        }
-        else
-            Console.Error.WriteLine("Invalid position");
-    }
-
-    // Helper function to determine whether the given position is valid
-    bool IsInBound((int, int) position)
-    {
-        return position.Item1 >= 0 && position.Item1 < _dimension && position.Item2 >= 0 && position.Item2 < _dimension;
+        _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
     }
 
     public void SetDimension(int option)
     {
         _dimension = GameManager.DimOptions[option];
-    }
-
-    // Helper function to return whether the grid at that coordinate is player 1's grid
-    bool IsP1Side(int i, int j)
-    {
-        // For now, we can just set the upper half as P1's but we can eventually have different configurations
-        return j < _dimension / 2;
     }
 
 
@@ -111,23 +108,26 @@ public class GridManager : MonoBehaviour
 
         // Since we want _size tiles for each column/row, set the constraint count
         grid.constraintCount = _dimension;
-
-        // Initialize the tiles array
-        _tiles = new Tile[_dimension, _dimension];
     }
 
     // Helper function to instantiate the tile prefabs
-    void PopulateGrid()
+    void PopulateGrid((int, bool)[,] board)
     {
+        // Initialize the tiles array
+        _tiles = new Tile[_dimension, _dimension];
+
         for (int i = 0; i < _dimension; i++)
         {
             for (int j = 0; j < _dimension; j++)
             {
-                bool isP1 = IsP1Side(i, j);
-                _tiles[i, j] = isP1 ? Instantiate(_p1TilePrefab) : Instantiate(_p2TilePrefab);
-                _tiles[i, j].name = $"tile{i}-{j}";
-                _tiles[i, j].transform.SetParent(_canvas.transform, false);
-                _tiles[i, j].Init(isP1, (i, j));
+                (int, int) pos = (i, j);
+                bool isP1 = board[i, j].Item2;
+                Tile tile = Instantiate(_tilePrefab);
+                tile.name = $"tile{i}-{j}";
+                tile.transform.SetParent(_canvas.transform, false);
+                tile._button.onClick.AddListener(() => { _gameManager.SetPosition(tile); });
+                tile.Init(isP1, pos);
+                _tiles[i, j] = tile;
             }
         }
     }
