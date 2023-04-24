@@ -25,7 +25,14 @@ public class Game
     public Game(int dim, bool _isOpponentAI)
 	{
         p1 = new Player(1);
-		p2 = new Player(2);
+		if (_isOpponentAI)
+		{
+			p2 = new ComputerPlayer(2);
+		}
+		else {
+            p2 = new Player(2);
+        }
+		
 		isP1Turn = true;
 		board = new(int, bool)[dim,dim];
 		for (int i = 0; i < dim; i++) {
@@ -45,7 +52,7 @@ public class Game
 
 	// Tries to make a move for the current player with the given number.
 	// If it is invalid, then returns false.
-	// If it is valid, then it updates the internal board and score accordingly
+	// If it is valid, then it returns true and updates internal representation accordingly
 	public bool MakeMove((int,int) position, int number) {
 		if (!IsValid(position, number))
 		{
@@ -76,8 +83,37 @@ public class Game
 			return "Tie!";
 		}
 	}
-	protected internal bool IsValid((int, int) position, int number) {
+	public bool isPrime(int number) {
+		return false;
+	}
+	private bool isCompatible((int, int) position, int number) {
+		if (board[position.Item1, position.Item2].Item2 != isP1Turn)
+		{
+			return true;
+		}
+		if (position.Item1 >= 0 && position.Item1 < board.Length && position.Item2 >= 0 && position.Item2 < board.Length)
+		{
+			return number % board[position.Item1,position.Item2].Item1 == 0 || number % board[position.Item1, position.Item2].Item1 == 0;
+		}
 		return true;
+	}
+	protected internal bool IsValid((int, int) position, int number) {
+		//Oponent larger number
+		if (board[position.Item1, position.Item2].Item1 >= number && board[position.Item1, position.Item2].Item2 != isP1Turn) return false;
+        //Check prime rule
+        if (isPrime(number)) {
+
+		}
+		bool compt1 = isCompatible((position.Item1 - 1, position.Item2), number);
+        bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
+        bool compt3 = isCompatible((position.Item1 + 1, position.Item2), number);
+        bool compt4 = isCompatible((position.Item1, position.Item2 + 1), number);
+		if (!(compt1 && compt2 && compt3 && compt4)) return false;
+
+        if (isPrime(number) ){
+			return true;
+        }
+        return true;
     }
     protected internal int ComputeScore(bool isP1) {
 		return 0;
