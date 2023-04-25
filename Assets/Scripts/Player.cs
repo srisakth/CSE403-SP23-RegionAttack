@@ -26,7 +26,9 @@ public class Player
         numberPool.Sort();
     }
 
-    public void removeNum(int number) { numberPool.Remove(number);}
+    public void removeNum(int number) {
+        numberPool.Remove(number);
+    }
 
     public void replaceNum(int idx, int number) {
         if (idx >= numberPool.Count)
@@ -45,6 +47,9 @@ public class Player
     public void setScore(int score)
     {
         curScore = score;
+    }
+    public List<int> getNumberPool() {
+        return numberPool;
     }
 }
 
