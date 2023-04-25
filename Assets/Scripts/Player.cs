@@ -48,5 +48,8 @@ public class Player
     {
         curScore = score;
     }
+    public List<int> getNumberPool() {
+        return numberPool;
+    }
 }
 

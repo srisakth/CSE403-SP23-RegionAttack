@@ -59,7 +59,7 @@ public class Game
 
 	// Tries to make a move for the current player with the given number.
 	// If it is invalid, then returns 0.
-	// If it is valid, then it updates the internal board and score accordingly and return the new number for the next player.
+	// If it is valid, then it updates the internal board and score accordingly and return the new number for the current player.
 
 	public int MakeMove((int, int) position, int number) {
 		if (!IsValid(position, number))
@@ -73,12 +73,12 @@ public class Game
 		if (isP1Turn)
 		{
 			p1.removeNum(number);
-			p2.addNum(random.Next(1, maxNumber + 1));
+			p1.addNum(newNum);
 		}
 		else
 		{
 			p2.removeNum(number);
-			p1.addNum(random.Next(1, maxNumber + 1));
+			p2.addNum(newNum);
 		}
 
 		// Update the scores
@@ -124,7 +124,7 @@ public class Game
 	protected internal bool IsValid((int, int) position, int number) {
 		//Check current value of cell: 
 		//Oponent larger number
-		if (board[position.Item1, position.Item2].Item1 >= number && board[position.Item1, position.Item2].Item2 != isP1Turn) return false;
+		if (board[position.Item1, position.Item2].Item1 >= number && isPlayersNumber(position, isP1Turn)) return false;
 		//Check conflict with 4 adjacent numbers
 		bool compt1 = isCompatible((position.Item1 - 1, position.Item2), number);
 		bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
@@ -141,42 +141,60 @@ public class Game
 
 		return false;
 	}
-	protected internal void markRegion((int, int) start, bool isP1, bool[,] check, bool[,] curReg) {
-		if (!validPosition(start)) return;
-		if (!check[start.Item1,start.Item2] && board[start.Item1, start.Item2].Item2 == isP1) {
-			check[start.Item1, start.Item2] = true;
-			curReg[start.Item1, start.Item2] = true;
-            markRegion((start.Item1-1, start.Item2), isP1, check, curReg);
-            markRegion((start.Item1, start.Item2-1), isP1, check, curReg);
-            markRegion((start.Item1+1, start.Item2), isP1, check, curReg);
-            markRegion((start.Item1, start.Item2+1), isP1, check, curReg);
+	// Helper Function for fillRegion
+	protected internal void fillInternalPos(bool[,] curReg, (int, int) botRightCorner)
+	{
+		int l = 1;
+		int u = 1;
+		while (botRightCorner.Item1 - l >= 0 && curReg[botRightCorner.Item1- l, botRightCorner.Item2]) l++;
+        while (botRightCorner.Item2 - u >= 0 && curReg[botRightCorner.Item1, botRightCorner.Item2- u]) u++;
+		int[] posl = new int[l];
+		int[] posu = new int[u];
+		for (int i = 0; i < l; i++) {
+			while (curReg[botRightCorner.Item1 - i, botRightCorner.Item2 - posl[i]]) posl[i]++;
+		}
+        for (int i = 0; i < u; i++)
+        {
+            while (curReg[botRightCorner.Item1 - posu[i], botRightCorner.Item2 - i]) posu[i]++;
         }
-	}
-	protected internal bool checkSquare(bool[,] curReg, (int,int) botRightCorner,int size) {
-		if (!(botRightCorner.Item1 - size >= 0 && botRightCorner.Item1 >= 0)) return false; 
-		for (int i = 0; i < size; i++) {
-			if (!(curReg[botRightCorner.Item1 - i, botRightCorner.Item2] && curReg[botRightCorner.Item1, botRightCorner.Item2 - i])) return false;
-            if (!(curReg[botRightCorner.Item1 - i, botRightCorner.Item2-size] && curReg[botRightCorner.Item1-size, botRightCorner.Item2 - i])) return false;
-        }
-		return true;
-	}
+		for (int i = 1; i < l; i++) {
+			for (int j = 1; j < u; j++) {
+				if (posl[i] >= j && posu[j] >= i) {
+					for (int k = 1; k <= i; k++) {
+						for (int m = 1; m <= j; m++) {
+							curReg[botRightCorner.Item1 - k, botRightCorner.Item2 - m] = true;
+						}
+					}
+				}
+			}
+		}
+    }
+	// Marks all enclosed tiles
 	protected internal void fillRegion(bool[,] curReg) {
         for (int i = _dim-1; i >= 0; i--){
             for (int j = _dim-1; j >= 0; j--){
 				if (curReg[i, j]) {
-					int l = 3;
-					while (checkSquare(curReg, (i, j), l++)) {
-						for (int i2 = i-1; i2 > i-l; i2--) {
-                            for (int j2 = i - 1; j2 > j - l; j2--){
-								curReg[i2, j2] = true;
-                            }
-                        }
-					}
+					fillInternalPos(curReg, (i, j));
 				}
             }
         }
     }
-	protected internal int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
+	// Marks all tiles as true, which are contained in the region containing start
+    protected internal void markRegion((int, int) start, bool isP1, bool[,] check, bool[,] curReg)
+    {
+        if (!validPosition(start)) return;
+        if (!check[start.Item1, start.Item2] && isPlayersNumber((start.Item1, start.Item2), isP1))
+        {
+            check[start.Item1, start.Item2] = true;
+            curReg[start.Item1, start.Item2] = true;
+            markRegion((start.Item1 - 1, start.Item2), isP1, check, curReg);
+            markRegion((start.Item1, start.Item2 - 1), isP1, check, curReg);
+            markRegion((start.Item1 + 1, start.Item2), isP1, check, curReg);
+            markRegion((start.Item1, start.Item2 + 1), isP1, check, curReg);
+        }
+    }
+    // Computes size of Region containing position of given Player
+    protected internal int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
 	{
 		int regSize = 0;
         bool[,] curReg = new bool[_dim, _dim];
@@ -189,13 +207,14 @@ public class Game
         }
         return regSize;
 	}
+	// Computes score of given player
     protected internal int ComputeScore(bool isP1)
     {
 		int maxReg = 0;
 		bool[,] check = new bool[_dim,_dim];
 		for (int i = 0; i < _dim; i++) {
 			for (int j = 0; j < _dim; j++) {
-				if (!check[i, j] && board[i,j].Item2 == isP1) {
+				if (!check[i, j] && isPlayersNumber((i,j), isP1)) {
 					maxReg = Math.Max(maxReg, ComputeRegionSize((i,j), isP1, check));
 				}
 				check[i, j] = true;
@@ -222,5 +241,7 @@ public class Game
 		// For now, we can just set the lower half as P1's but we can eventually have different configurations
 		return position.Item2 < _dim / 2;
 	}
-	
+	bool isPlayersNumber((int, int) position, bool isP1) {
+		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
+	}
 }
