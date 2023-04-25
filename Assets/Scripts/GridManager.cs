@@ -73,12 +73,6 @@ public class GridManager : MonoBehaviour
         _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
     }
 
-    public void SetDimension(int option)
-    {
-        _dimension = GameManager.DimOptions[option];
-    }
-
-
     // Helper function to scale and initialize the canvas for the tiles
     void InitializeGrid()
     {

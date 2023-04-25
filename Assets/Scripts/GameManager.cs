@@ -27,8 +27,14 @@ public class GameManager : MonoBehaviour
     public HandManager _p1Hand, _p2Hand;
     public PopUp _popup;
 
+    // Selected tiles
+    // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
+    // to check for selection.
     private Tile _numTile, _boardTile;
 
+
+    // Starts the game by removing any previous GameObjects, instantiating a new game with the given
+    // Game options, and passing it to the GridManager and HandManagers to be displayed.
     public void StartGame()
     {
         // Wipe out any previous stuff
@@ -42,25 +48,26 @@ public class GameManager : MonoBehaviour
 
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
+
+        // Make the references null just in case
+        _boardTile = null;
+        _numTile = null;
     }
 
+    // Terminates the game by removing any tiles in the players' hand and displaying the appropriate win message.
     public void EndGame()
     {
         print("STOP!");
         _p1Hand.ClearHand();
         _p2Hand.ClearHand();
-        _popup.StartDisplay(_game.TerminateGame());
+        _popup.StartDisplay(false, _game.TerminateGame());
+
+        // Make the references null just in case
+        _boardTile = null;
+        _numTile = null;
     }
 
-    void DisplayHand(HandManager hand, Player player)
-    {
-        hand.ClearHand();
-
-        foreach (int num in player.numberPool)
-        {
-            hand.AddNumber(num);
-        }
-    }
+    // **** Game Mode extraction ****
 
     public void SetPlayerMode(bool isOpponentAI)
     {
@@ -71,6 +78,8 @@ public class GameManager : MonoBehaviour
     {
         _dim = DimOptions[option];
     }
+
+    // **** Tile Selection ****
 
     // Keeps track of the position within the grid
     public void SetPosition(Tile tile)
@@ -87,6 +96,8 @@ public class GameManager : MonoBehaviour
             MakeMove();
     }
 
+    // With the appropriate tile and number tile selected, tries to make the move by passing it to the
+    // Game object. If valid, then updates the board accordingly and adds the new number to the opponent's deck.
     private void MakeMove()
     {
         Debug.Assert(_boardTile != null && _numTile != null);
@@ -106,5 +117,17 @@ public class GameManager : MonoBehaviour
         }
         _boardTile = null;
         _numTile = null;
+    }
+
+
+    // Helper function called to instantiate the game with respective calls to the hand manager.
+    void DisplayHand(HandManager hand, Player player)
+    {
+        hand.ClearHand();
+
+        foreach (int num in player.numberPool)
+        {
+            hand.AddNumber(num);
+        }
     }
 }
