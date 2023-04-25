@@ -110,21 +110,24 @@ public class Game
 	}
 	public bool isDivMul((int, int) position, int number)
 	{
-		if (validPosition(position))
+		if (validPosition(position) && isPlayersNumber(position, isP1Turn))
 		{
 			return number % board[position.Item1, position.Item2].Item1 == 0 || number % board[position.Item1, position.Item2].Item1 == 0;
 		}
 		return false;
 	}
 	private bool isCompatible((int, int) position, int number) {
-		if (board[position.Item1, position.Item2].Item2 != isP1Turn) return true;
-		if (validPosition(position) && !isDivMul(position, number)) return false;
-		return true;
+		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)) return true;
+		else if (isDivMul(position, number)) return true;
+		return false;
 	}
 	protected internal bool IsValid((int, int) position, int number) {
 		//Check current value of cell: 
 		//Oponent larger number
-		if (board[position.Item1, position.Item2].Item1 >= number && isPlayersNumber(position, isP1Turn)) return false;
+		if (board[position.Item1, position.Item2].Item1 >= number && !isPlayersNumber(position, isP1Turn))
+		{
+			return false;
+		}
 		//Check conflict with 4 adjacent numbers
 		bool compt1 = isCompatible((position.Item1 - 1, position.Item2), number);
 		bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
@@ -137,9 +140,8 @@ public class Game
 		bool divmul3 = isDivMul((position.Item1 + 1, position.Item2), number);
 		bool divmul4 = isDivMul((position.Item1, position.Item2 + 1), number);
 		if (divmul1 || divmul2 || divmul3 || divmul4) return true;
-		if (isPrime(number) && IsP1Side(position)) return true;
-
-		return false;
+        if (isPrime(number) && IsP1Side(position) != isP1Turn) return true;
+        return false;
 	}
 	// Helper Function for fillRegion
 	protected internal void fillInternalPos(bool[,] curReg, (int, int) botRightCorner)
@@ -151,11 +153,11 @@ public class Game
 		int[] posl = new int[l];
 		int[] posu = new int[u];
 		for (int i = 0; i < l; i++) {
-			while (curReg[botRightCorner.Item1 - i, botRightCorner.Item2 - posl[i]]) posl[i]++;
+			while (posl[i] <= botRightCorner.Item2 && curReg[botRightCorner.Item1 - i, botRightCorner.Item2 - posl[i]]) posl[i]++;
 		}
         for (int i = 0; i < u; i++)
         {
-            while (curReg[botRightCorner.Item1 - posu[i], botRightCorner.Item2 - i]) posu[i]++;
+            while (posu[i] <= botRightCorner.Item1 && curReg[botRightCorner.Item1 - posu[i], botRightCorner.Item2 - i]) posu[i]++;
         }
 		for (int i = 1; i < l; i++) {
 			for (int j = 1; j < u; j++) {
