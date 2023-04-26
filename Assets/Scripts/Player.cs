@@ -6,11 +6,13 @@ public class Player
 {
 	protected internal int id;
     int curScore;
+    protected internal Game game;
 	public List<int> numberPool;
 
-	public Player(int id)
+	public Player(int id, Game game)
 	{
 		this.id = id;
+        this.game = game;
 		curScore = 0;
 		numberPool = new List<int>();
 	}

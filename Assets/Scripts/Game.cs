@@ -22,13 +22,13 @@ public class Game
 
 	public Game(int dim, bool _isOpponentAI)
 	{
-		p1 = new Player(1);
+		p1 = new Player(1,this);
 		if (_isOpponentAI)
 		{
-			p2 = new ComputerPlayer(2);
+			p2 = new ComputerPlayer(2,this);
 		}
 		else {
-			p2 = new Player(2);
+			p2 = new Player(2,this);
 		}
 
 		isP1Turn = true;
@@ -122,7 +122,8 @@ public class Game
 		return false;
 	}
 	protected internal bool IsValid((int, int) position, int number) {
-		//Check current value of cell: 
+		//Check current value of cell:
+		if (!validPosition(position)) return false;
 		//Oponent larger number
 		if (board[position.Item1, position.Item2].Item1 >= number && !isPlayersNumber(position, isP1Turn))
 		{
@@ -232,7 +233,9 @@ public class Game
 	public int getMaxNumber() {
 		return maxNumber;
 	}
-
+	public int getDim() {
+		return _dim;
+	}
 	// Helper functions
 	bool validPosition((int, int) position) {
 		return position.Item1 >= 0 && position.Item1 < _dim && position.Item2 >= 0 && position.Item2 < _dim;
@@ -243,7 +246,7 @@ public class Game
 		// For now, we can just set the lower half as P1's but we can eventually have different configurations
 		return position.Item2 < _dim / 2;
 	}
-	bool isPlayersNumber((int, int) position, bool isP1) {
+	public bool isPlayersNumber((int, int) position, bool isP1) {
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
 	}
 }
