@@ -43,11 +43,21 @@ public class GameManager : MonoBehaviour
         // Make a new game
         _game = new Game(_dim, _isOpponentAI);
 
-        // Use the game 
+        // Use the game to initialize the board UI
         _gridManager.Initialize(_dim, _game.board);
 
+        // Display the hands
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
+
+        // Disable whoever is not the first player
+        _p1Hand.SetEnable(_game.isP1Turn);
+        _p2Hand.SetEnable(!_game.isP1Turn);
+
+        // Alert the first player
+        string player = _game.isP1Turn ? "1" : "2";
+
+        _popup.StartDisplay(true, $"Player {player}'s Turn!");
 
         // Make the references null just in case
         _boardTile = null;
@@ -101,7 +111,6 @@ public class GameManager : MonoBehaviour
     private void MakeMove()
     {
         Debug.Assert(_boardTile != null && _numTile != null);
-        bool isP1Turn = _game.isP1Turn;
         int num = _game.MakeMove(_boardTile._position, _numTile._num);
         if (num > 0)
         {
@@ -115,6 +124,10 @@ public class GameManager : MonoBehaviour
             // Update the score
             _score1.StartDisplay(false, _game.p1.getScore().ToString());
             _score2.StartDisplay(false, _game.p2.getScore().ToString());
+
+            // Enable/disable the hands
+            _p1Hand.SetEnable(_game.isP1Turn);
+            _p2Hand.SetEnable(!_game.isP1Turn);
 
         } else
         {

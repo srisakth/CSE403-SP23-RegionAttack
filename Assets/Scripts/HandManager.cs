@@ -29,7 +29,7 @@ public class HandManager : MonoBehaviour
         tile.Init(_isP1, (-1, -1));
         tile.SetNum((number, _isP1));
         tile._button.onClick.AddListener(() => { _gameManager.SetNumber(tile); });
-        tile.transform.SetParent(_parent.transform);
+        tile.transform.SetParent(_parent.transform, false);
         _hand.Add(tile);
     }
 
@@ -40,5 +40,14 @@ public class HandManager : MonoBehaviour
         _hand.RemoveAt(idx);
         GameObject.Destroy(tile);
 
+    }
+
+    // Enables or disables the tiles
+    public void SetEnable(bool enable)
+    {
+        foreach (Tile tile in _hand)
+        {
+            tile._button.enabled = enable;
+        }
     }
 }
