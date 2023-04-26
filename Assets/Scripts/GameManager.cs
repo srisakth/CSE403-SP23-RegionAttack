@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
             DisplayHand(_p2Hand, _game.p2);
 
             // Update the board
-            _gridManager.UpdateGrid(!isP1Turn, _boardTile._position, _numTile._num);
+            _gridManager.UpdateGrid(_game.board);
 
             // Update the score
             _score1.StartDisplay(false, _game.p1.getScore().ToString());

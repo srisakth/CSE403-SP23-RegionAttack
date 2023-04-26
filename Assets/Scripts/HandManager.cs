@@ -27,7 +27,7 @@ public class HandManager : MonoBehaviour
         Tile tile = Instantiate(_tilePrefab);
 
         tile.Init(_isP1, (-1, -1));
-        tile.SetNum(_isP1, number);
+        tile.SetNum((number, _isP1));
         tile._button.onClick.AddListener(() => { _gameManager.SetNumber(tile); });
         tile.transform.SetParent(_parent.transform);
         _hand.Add(tile);

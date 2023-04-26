@@ -67,10 +67,16 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    // Sets the tile at the given position to hold the given number
-    public void UpdateGrid(bool isP1Num, (int, int) position, int number)
+    // Updates the tiles to reflect the current board
+    public void UpdateGrid((int, bool)[,] board)
     {
-        _tiles[position.Item1, position.Item2].SetNum(isP1Num, number);
+        for (int i = 0; i < _dimension; i++)
+        {
+            for (int j = 0; j < _dimension; j++)
+            {
+                _tiles[i, j].SetNum(board[i, j]);
+            }
+        }
     }
 
     // Helper function to scale and initialize the canvas for the tiles
