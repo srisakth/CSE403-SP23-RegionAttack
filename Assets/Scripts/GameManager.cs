@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     // Game objects
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;
-    public PopUp _popup;
+    public PopUp _popup, _score1, _score2;
 
     // Selected tiles
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
@@ -103,13 +103,18 @@ public class GameManager : MonoBehaviour
         Debug.Assert(_boardTile != null && _numTile != null);
         bool isP1Turn = _game.isP1Turn;
         int num = _game.MakeMove(_boardTile._position, _numTile._num);
-        if (num != 0)
+        if (num > 0)
         {
             // The move is valid: delete the hand and redisplay the hand for the other player
             DisplayHand(_p1Hand, _game.p1);
             DisplayHand(_p2Hand, _game.p2);
+
             // Update the board
-            _gridManager.UpdateGrid(isP1Turn, _boardTile._position, _numTile._num);
+            _gridManager.UpdateGrid(!isP1Turn, _boardTile._position, _numTile._num);
+
+            // Update the score
+            _score1.StartDisplay(false, _game.p1.getScore().ToString());
+            _score2.StartDisplay(false, _game.p2.getScore().ToString());
 
         } else
         {
