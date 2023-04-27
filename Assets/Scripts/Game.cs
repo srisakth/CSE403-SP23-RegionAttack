@@ -104,7 +104,8 @@ public class Game
 		}
 	}
 
-	public bool isPrime(int number) {
+	public bool isPrime(int number)
+	{
 		int[] sprimes = new int[] { 2, 3, 5, 7, 11 };
 		return Array.Exists(sprimes, element => element == number);
 	}
@@ -116,7 +117,8 @@ public class Game
 		}
 		return false;
 	}
-	private bool isCompatible((int, int) position, int number) {
+	private bool isCompatible((int, int) position, int number)
+	{
 		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)) return true;
 		else if (isDivMul(position, number)) return true;
 		return false;
@@ -244,7 +246,7 @@ public class Game
 	bool IsP1Side((int, int) position)
 	{
 		// For now, we can just set the lower half as P1's but we can eventually have different configurations
-		return position.Item2 < _dim / 2;
+		return position.Item2 >= _dim / 2;
 	}
 	public bool isPlayersNumber((int, int) position, bool isP1) {
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
