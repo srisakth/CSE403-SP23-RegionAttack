@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 
 /*
@@ -25,7 +26,10 @@ public class GameManager : MonoBehaviour
     // Game objects
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;
-    public PopUp _popup, _score1, _score2;
+    public PopUp _popup;
+    public Timer _moveTimer;
+    
+    public TMP_Text _score1, _score2;
 
     // Selected tiles
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
@@ -46,11 +50,19 @@ public class GameManager : MonoBehaviour
         // Use the game to initialize the board UI
         _gridManager.Initialize(_dim, _game.board);
 
-        // Display the hands
+        // Make the references null just in case
+        _boardTile = null;
+        _numTile = null;
+
+        // Set the initial score
+        _score1.text = "0";
+        _score2.text = "0";
+
+        // Display the hand
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
 
-        // Disable whoever is not the first player
+        // Enable/disable the hands
         _p1Hand.SetEnable(_game.isP1Turn);
         _p2Hand.SetEnable(!_game.isP1Turn);
 
@@ -59,9 +71,10 @@ public class GameManager : MonoBehaviour
 
         _popup.StartDisplay(true, $"Player {player}'s Turn!");
 
-        // Make the references null just in case
-        _boardTile = null;
-        _numTile = null;
+        // Start the timer
+        _moveTimer.ResetTimer();
+        _moveTimer.StartTimer();
+
     }
 
     // Terminates the game by removing any tiles in the players' hand and displaying the appropriate win message.
@@ -71,6 +84,7 @@ public class GameManager : MonoBehaviour
         _p1Hand.ClearHand();
         _p2Hand.ClearHand();
         _popup.StartDisplay(false, _game.TerminateGame());
+        _moveTimer.StopTimer();
 
         // Make the references null just in case
         _boardTile = null;
@@ -114,27 +128,39 @@ public class GameManager : MonoBehaviour
         int num = _game.MakeMove(_boardTile._position, _numTile._num);
         if (num > 0)
         {
-            // The move is valid: delete the hand and redisplay the hand for the other player
-            DisplayHand(_p1Hand, _game.p1);
-            DisplayHand(_p2Hand, _game.p2);
-
             // Update the board
             _gridManager.UpdateGrid(_game.board);
 
             // Update the score
-            _score1.StartDisplay(false, _game.p1.getScore().ToString());
-            _score2.StartDisplay(false, _game.p2.getScore().ToString());
+            _score1.text = $"{_game.p1.getScore()}";
+            _score2.text = $"{_game.p2.getScore()}";
 
-            // Enable/disable the hands
-            _p1Hand.SetEnable(_game.isP1Turn);
-            _p2Hand.SetEnable(!_game.isP1Turn);
-
+            EndMove();
         } else
         {
             _popup.StartDisplay("Invalid Move!");
         }
         _boardTile = null;
         _numTile = null;
+    }
+
+    // Advances the game to the other player's turn
+    public void EndMove()
+    {
+        // If either one is set to null, then we must have not placed a number
+        if (_numTile == null || _boardTile == null)
+            print("Skipped!");
+        // _game.Skip();
+
+        // We should have a new hand, so let's just redisplay everything for now
+        DisplayHand(_p1Hand, _game.p1);
+        DisplayHand(_p2Hand, _game.p2);
+
+        // Enable/disable the hands
+        _p1Hand.SetEnable(_game.isP1Turn);
+        _p2Hand.SetEnable(!_game.isP1Turn);
+
+        _moveTimer.ResetTimer();
     }
 
 
