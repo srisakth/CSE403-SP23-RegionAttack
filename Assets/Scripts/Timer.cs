@@ -19,6 +19,7 @@ public class Timer : MonoBehaviour
     public void ResetTimer()
     {
         _timeElapsed = 0;
+        _enabled = true;
     }
 
     // Starts the timer
