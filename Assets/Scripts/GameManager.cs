@@ -50,31 +50,42 @@ public class GameManager : MonoBehaviour
         // Use the game to initialize the board UI
         _gridManager.Initialize(_dim, _game.board);
 
-        // Make the references null just in case
-        _boardTile = null;
-        _numTile = null;
-
         // Set the initial score
         _score1.text = "0";
         _score2.text = "0";
-
-        // Display the hand
-        DisplayHand(_p1Hand, _game.p1);
-        DisplayHand(_p2Hand, _game.p2);
-
-        // Enable/disable the hands
-        _p1Hand.SetEnable(_game.isP1Turn);
-        _p2Hand.SetEnable(!_game.isP1Turn);
 
         // Alert the first player
         string player = _game.isP1Turn ? "1" : "2";
 
         _popup.StartDisplay(true, $"Player {player}'s Turn!");
 
-        // Start the timer
-        _moveTimer.ResetTimer();
         _moveTimer.StartTimer();
 
+        EndMove();
+    }
+
+    // Method to restart the game. Assumes that (1) there was a game played previously, and (2) the grid dimensions
+    // are the same
+    public void RestartGame()
+    {
+        // Make a new game
+        _game = new Game(_dim, _isOpponentAI);
+
+        // We already have tiles, so we'll just reset it
+        _gridManager.UpdateGrid(_game.board);
+
+        // Set the initial score
+        _score1.text = "0";
+        _score2.text = "0";
+
+        // Alert the first player
+        string player = _game.isP1Turn ? "1" : "2";
+
+        _popup.StartDisplay(true, $"Player {player}'s Turn!");
+
+        _moveTimer.StartTimer();
+
+        EndMove();
     }
 
     // Terminates the game by removing any tiles in the players' hand and displaying the appropriate win message.
@@ -125,6 +136,7 @@ public class GameManager : MonoBehaviour
     private void MakeMove()
     {
         Debug.Assert(_boardTile != null && _numTile != null);
+        print(_boardTile._position);
         int num = _game.MakeMove(_boardTile._position, _numTile._num);
         if (num > 0)
         {
@@ -139,19 +151,20 @@ public class GameManager : MonoBehaviour
         } else
         {
             _popup.StartDisplay("Invalid Move!");
+            _boardTile = null;
+            _numTile = null;
         }
-        _boardTile = null;
-        _numTile = null;
+    }
+
+    public void Skip()
+    {
+        // _game.Skip();
+        EndMove();
     }
 
     // Advances the game to the other player's turn
-    public void EndMove()
+    void EndMove()
     {
-        // If either one is set to null, then we must have not placed a number
-        if (_numTile == null || _boardTile == null)
-            print("Skipped!");
-        // _game.Skip();
-
         // We should have a new hand, so let's just redisplay everything for now
         DisplayHand(_p1Hand, _game.p1);
         DisplayHand(_p2Hand, _game.p2);
@@ -161,6 +174,10 @@ public class GameManager : MonoBehaviour
         _p2Hand.SetEnable(!_game.isP1Turn);
 
         _moveTimer.ResetTimer();
+        _moveTimer.transform.rotation = _game.isP1Turn ? Quaternion.Euler(0, 0, 180) : Quaternion.identity;
+
+        _boardTile = null;
+        _numTile = null;
     }
 
 
