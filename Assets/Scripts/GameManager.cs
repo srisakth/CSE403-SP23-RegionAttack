@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour
         Debug.Assert(_boardTile != null && _numTile != null);
         print(_boardTile._position);
         int num = _game.MakeMove(_boardTile._position, _numTile._num);
+        Debug.Log(_boardTile._position);
         if (num > 0)
         {
             // Update the board

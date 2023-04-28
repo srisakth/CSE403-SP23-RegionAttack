@@ -14,7 +14,7 @@ public class ComputerPlayer : Player
 			int x = random.Next(0, game.getDim() / 2);
 			int y = random.Next(0, game.getDim());
 
-			if (game.IsValid((x, y), prime))
+			if (game.IsValid((x, y), prime)>0)
 			{
 				return ((x, y), prime);
 			}
@@ -42,10 +42,10 @@ public class ComputerPlayer : Player
 					List<int> nums = haveMulDiv(game.board[i, j].Item1);
 					for (int l = 0; l < nums.Count; l++) {
 						int num = nums[l];
-                        if (game.IsValid((i + 1, j), num)) return ((i + 1, j), num);
-                        if (game.IsValid((i - 1, j), num)) return ((i - 1, j), num);
-                        if (game.IsValid((i, j + 1), num)) return ((i, j + 1), num);
-                        if (game.IsValid((i + 1, j - 1), num)) return ((i, j - 1), num);
+                        if (game.IsValid((i + 1, j), num)>0) return ((i + 1, j), num);
+                        if (game.IsValid((i - 1, j), num)>0) return ((i - 1, j), num);
+                        if (game.IsValid((i, j + 1), num)>0) return ((i, j + 1), num);
+                        if (game.IsValid((i + 1, j - 1), num)>0) return ((i, j - 1), num);
                     }
                 }
             }
