@@ -1,5 +1,4 @@
 ﻿using System;
-
 /* 
  * The Game class is an abstraction of the game state.  
  */
@@ -62,9 +61,10 @@ public class Game
 	// If it is valid, then it updates the internal board and score accordingly and return the new number for the current player.
 
 	public int MakeMove((int, int) position, int number) {
-		if (!IsValid(position, number))
+		int x = IsValid(position, number);
+        if (x <= 0)
 		{
-			return 0;
+			return x;
 		}
 		board[position.Item1, position.Item2] = (number, isP1Turn);
 
@@ -109,6 +109,7 @@ public class Game
 		int[] sprimes = new int[] { 2, 3, 5, 7, 11 };
 		return Array.Exists(sprimes, element => element == number);
 	}
+
 	public bool isDivMul((int, int) position, int number)
 	{
 		if (validPosition(position) && isPlayersNumber(position, isP1Turn))
@@ -117,35 +118,66 @@ public class Game
 		}
 		return false;
 	}
+
 	private bool isCompatible((int, int) position, int number)
 	{
 		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)) return true;
 		else if (isDivMul(position, number)) return true;
 		return false;
 	}
-	protected internal bool IsValid((int, int) position, int number) {
+
+	protected internal int IsValid((int, int) position, int number) {
 		//Check current value of cell:
-		if (!validPosition(position)) return false;
-		//Oponent larger number
-		if (board[position.Item1, position.Item2].Item1 >= number && !isPlayersNumber(position, isP1Turn))
+		if (!validPosition(position))
 		{
-			return false;
+			return 0;	//invalid position (outside board)
 		}
-		//Check conflict with 4 adjacent numbers
-		bool compt1 = isCompatible((position.Item1 - 1, position.Item2), number);
-		bool compt2 = isCompatible((position.Item1, position.Item2 - 1), number);
-		bool compt3 = isCompatible((position.Item1 + 1, position.Item2), number);
-		bool compt4 = isCompatible((position.Item1, position.Item2 + 1), number);
-		if (!(compt1 && compt2 && compt3 && compt4)) return false;
+		//Oponent larger number
+		if (!isPlayersNumber(position, isP1Turn) && board[position.Item1, position.Item2].Item1 >= number)
+		{
+			return -1;	//position contains larger or equal oponent number
+		}
+        //Check conflict with adjacent numbers
+        bool[] comp = new bool[4];
+		comp[0] = isCompatible((position.Item1 - 1, position.Item2), number);
+		comp[1] = isCompatible((position.Item1, position.Item2 - 1), number);
+		comp[2] = isCompatible((position.Item1 + 1, position.Item2), number);
+		comp[3] = isCompatible((position.Item1, position.Item2 + 1), number);
+        for (int i = 0; i < 4; i++)
+        {
+            if (!comp[i])
+            {
+                return -(i + 1); // the tile corresponding to i+1 contains a conflicting number
+            }
+        }
+        //Check multiple divisor rule
+        bool[] divmul = new bool[4];
+		divmul[0] = isDivMul((position.Item1 - 1, position.Item2), number);
+        divmul[1] = isDivMul((position.Item1, position.Item2 - 1), number);
+        divmul[2] = isDivMul((position.Item1 + 1, position.Item2), number);
+        divmul[3] = isDivMul((position.Item1, position.Item2 + 1), number);
+		for (int i = 0; i < 4; i++) {
+			if (divmul[i]) {
+				return i + 1;
+			}
+		}
 		//Check prime rule
-		bool divmul1 = isDivMul((position.Item1 - 1, position.Item2), number);
-		bool divmul2 = isDivMul((position.Item1, position.Item2 - 1), number);
-		bool divmul3 = isDivMul((position.Item1 + 1, position.Item2), number);
-		bool divmul4 = isDivMul((position.Item1, position.Item2 + 1), number);
-		if (divmul1 || divmul2 || divmul3 || divmul4) return true;
-        if (isPrime(number) && IsP1Side(position) != isP1Turn) return true;
-        return false;
+		if (isPrime(number))
+		{
+			if (IsP1Side(position) == isP1Turn)
+			{
+				return 5;   //prime rule correct
+			}
+			else
+			{
+				return -5;  //prime wrong side
+			}
+		}
+		else {
+			return -6; // not a prime and no extension
+		}
 	}
+
 	// Helper Function for fillRegion
 	protected internal void fillInternalPos(bool[,] curReg, (int, int) botRightCorner)
 	{
@@ -174,6 +206,7 @@ public class Game
 			}
 		}
     }
+
 	// Marks all enclosed tiles
 	protected internal void fillRegion(bool[,] curReg) {
         for (int i = _dim-1; i >= 0; i--){
@@ -184,6 +217,7 @@ public class Game
             }
         }
     }
+
 	// Marks all tiles as true, which are contained in the region containing start
     protected internal void markRegion((int, int) start, bool isP1, bool[,] check, bool[,] curReg)
     {
@@ -198,6 +232,7 @@ public class Game
             markRegion((start.Item1, start.Item2 + 1), isP1, check, curReg);
         }
     }
+
     // Computes size of Region containing position of given Player
     protected internal int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
 	{
@@ -213,6 +248,7 @@ public class Game
         return regSize;
 	}
 	// Computes score of given player
+
     protected internal int ComputeScore(bool isP1)
     {
 		int maxReg = 0;
@@ -229,26 +265,37 @@ public class Game
     }
 
 
-	public int getNumberPoolSize() {
+	public int getNumberPoolSize()
+	{
 		return initPoolSize;
 	}
-	public int getMaxNumber() {
+
+	public int getMaxNumber()
+	{
 		return maxNumber;
 	}
-	public int getDim() {
+
+	public int getDim()
+	{
 		return _dim;
 	}
+
 	// Helper functions
-	bool validPosition((int, int) position) {
+	bool validPosition((int, int) position)
+	{
 		return position.Item1 >= 0 && position.Item1 < _dim && position.Item2 >= 0 && position.Item2 < _dim;
 	}
+
 	// Helper function to return whether the grid at that coordinate is player 1's grid
 	bool IsP1Side((int, int) position)
 	{
 		// For now, we can just set the lower half as P1's but we can eventually have different configurations
 		return position.Item2 >= _dim / 2;
 	}
-	public bool isPlayersNumber((int, int) position, bool isP1) {
+
+	// Helper function returns if a certain position contains a number of the given player
+	public bool isPlayersNumber((int, int) position, bool isP1)
+	{
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
 	}
 }
