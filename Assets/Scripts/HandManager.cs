@@ -11,7 +11,7 @@ public class HandManager : MonoBehaviour
 
     public bool _isP1;
 
-    private List<Tile> _hand = new List<Tile>();
+    public List<Tile> _hand = new List<Tile>();
 
     public void ClearHand()
     {
@@ -20,6 +20,7 @@ public class HandManager : MonoBehaviour
             GameObject.Destroy(tile.gameObject);
         }
         _hand.Clear();
+        _parent.transform.DetachChildren();
     }
 
     public void AddNumber(int number)
@@ -38,8 +39,8 @@ public class HandManager : MonoBehaviour
     {
         int idx = _hand.IndexOf(tile);
         _hand.RemoveAt(idx);
+        tile.transform.SetParent(null);
         GameObject.Destroy(tile);
-
     }
 
     // Enables or disables the tiles
