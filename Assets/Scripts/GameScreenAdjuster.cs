@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenAdjuster : MonoBehaviour
+public class GameScreenAdjuster : MonoBehaviour
 {
     public GameManager gameManager;
     public RectTransform _moveTimer, _gameTimer;
