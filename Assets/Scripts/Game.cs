@@ -11,7 +11,7 @@ public class Game
 	// Variables (Game Board, Players)
 	protected internal Player p1;
 	protected internal Player p2;
-	protected internal bool isP1Turn;
+	public bool isP1Turn;
 
 	// The board stores (1) the number stored in the board and (2) whether that number is P1's number.
 	// If the number is 0, then the latter boolean does not matter.
@@ -298,7 +298,7 @@ public class Game
 	{
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
 	}
-	public void setGameBoard((int, bool)[,] board) {
-		this.board = board;
+	public void resetGameBoard() {
+		this.board = new (int,bool)[_dim,_dim];
 	}
 }
