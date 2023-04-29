@@ -126,7 +126,7 @@ public class Game
 		return false;
 	}
 
-	protected internal int IsValid((int, int) position, int number) {
+	public int IsValid((int, int) position, int number) {
 		//Check current value of cell:
 		if (!validPosition(position))
 		{
@@ -297,5 +297,8 @@ public class Game
 	public bool isPlayersNumber((int, int) position, bool isP1)
 	{
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
+	}
+	public void setGameBoard((int, bool)[,] board) {
+		this.board = board;
 	}
 }
