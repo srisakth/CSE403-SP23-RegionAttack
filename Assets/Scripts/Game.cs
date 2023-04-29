@@ -11,11 +11,11 @@ public class Game
 	// Variables (Game Board, Players)
 	protected internal Player p1;
 	protected internal Player p2;
-	protected internal bool isP1Turn;
+	public bool isP1Turn;
 
 	// The board stores (1) the number stored in the board and (2) whether that number is P1's number.
 	// If the number is 0, then the latter boolean does not matter.
-	protected internal (int, bool)[,] board;
+	public (int, bool)[,] board;
 
 	private Random random = new Random();
 
@@ -114,16 +114,23 @@ public class Game
 	{
 		if (validPosition(position) && isPlayersNumber(position, isP1Turn))
 		{
-			return number % board[position.Item1, position.Item2].Item1 == 0 || number % board[position.Item1, position.Item2].Item1 == 0;
+			int num = board[position.Item1, position.Item2].Item1;
+			return number %  num == 0 || num % number == 0;
+		}else{
+			return false;
 		}
-		return false;
+		
 	}
 
 	private bool isCompatible((int, int) position, int number)
 	{
-		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)) return true;
-		else if (isDivMul(position, number)) return true;
-		return false;
+		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)){
+			return true;
+		}else if (isDivMul(position, number)) {
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public int IsValid((int, int) position, int number) {
@@ -178,51 +185,19 @@ public class Game
 		}
 	}
 
-	// Helper Function for fillRegion
-	protected internal void fillInternalPos(bool[,] curReg, (int, int) botRightCorner)
-	{
-		int l = 1;
-		int u = 1;
-		while (botRightCorner.Item1 - l >= 0 && curReg[botRightCorner.Item1- l, botRightCorner.Item2]) l++;
-        while (botRightCorner.Item2 - u >= 0 && curReg[botRightCorner.Item1, botRightCorner.Item2- u]) u++;
-		int[] posl = new int[l];
-		int[] posu = new int[u];
-		for (int i = 0; i < l; i++) {
-			while (posl[i] <= botRightCorner.Item2 && curReg[botRightCorner.Item1 - i, botRightCorner.Item2 - posl[i]]) posl[i]++;
+	protected internal void fillOutside((int,int) start, bool[,] outside,bool[,] curReg) {
+		if(validPosition(start) && !curReg[start.Item1,start.Item2] && !outside[start.Item1,start.Item2]){
+			outside[start.Item1,start.Item2] = true;
+			fillOutside((start.Item1-1,start.Item2),outside,curReg);
+			fillOutside((start.Item1,start.Item2-1),outside,curReg);
+			fillOutside((start.Item1+1,start.Item2),outside,curReg);
+			fillOutside((start.Item1,start.Item2+1),outside,curReg);
 		}
-        for (int i = 0; i < u; i++)
-        {
-            while (posu[i] <= botRightCorner.Item1 && curReg[botRightCorner.Item1 - posu[i], botRightCorner.Item2 - i]) posu[i]++;
-        }
-		for (int i = 1; i < l; i++) {
-			for (int j = 1; j < u; j++) {
-				if (posl[i] >= j && posu[j] >= i) {
-					for (int k = 1; k <= i; k++) {
-						for (int m = 1; m <= j; m++) {
-							curReg[botRightCorner.Item1 - k, botRightCorner.Item2 - m] = true;
-						}
-					}
-				}
-			}
-		}
-    }
-
-	// Marks all enclosed tiles
-	protected internal void fillRegion(bool[,] curReg) {
-        for (int i = _dim-1; i >= 0; i--){
-            for (int j = _dim-1; j >= 0; j--){
-				if (curReg[i, j]) {
-					fillInternalPos(curReg, (i, j));
-				}
-            }
-        }
-    }
-
+	}
 	// Marks all tiles as true, which are contained in the region containing start
     protected internal void markRegion((int, int) start, bool isP1, bool[,] check, bool[,] curReg)
     {
-        if (!validPosition(start)) return;
-        if (!check[start.Item1, start.Item2] && isPlayersNumber((start.Item1, start.Item2), isP1))
+        if (validPosition(start) && !check[start.Item1, start.Item2] && isPlayersNumber((start.Item1, start.Item2), isP1))
         {
             check[start.Item1, start.Item2] = true;
             curReg[start.Item1, start.Item2] = true;
@@ -234,22 +209,28 @@ public class Game
     }
 
     // Computes size of Region containing position of given Player
-    protected internal int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
+    private int ComputeRegionSize((int, int) position, bool isP1, bool[,] check)
 	{
 		int regSize = 0;
         bool[,] curReg = new bool[_dim, _dim];
 		markRegion(position, isP1, check, curReg);
-		fillRegion(curReg);
+		bool[,] outside = new bool[_dim,_dim];
+		for(int i = 0; i < _dim; i++){
+			fillOutside((i,0),outside,curReg);
+			fillOutside((0,i),outside,curReg);
+			fillOutside((i,_dim),outside,curReg);
+			fillOutside((_dim,i),outside,curReg);
+		}
         for (int i = 0; i < _dim; i++){
             for (int j = 0; j < _dim; j++){
-				if (curReg[i, j]) regSize++;
+				if (!outside[i, j]) regSize++;
             }
         }
         return regSize;
 	}
-	// Computes score of given player
 
-    protected internal int ComputeScore(bool isP1)
+	// Computes score of given player
+    public int ComputeScore(bool isP1)
     {
 		int maxReg = 0;
 		bool[,] check = new bool[_dim,_dim];
@@ -298,7 +279,7 @@ public class Game
 	{
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
 	}
-	public void setGameBoard((int, bool)[,] board) {
-		this.board = board;
+	public void resetGameBoard() {
+		this.board = new (int,bool)[_dim,_dim];
 	}
 }
