@@ -9,24 +9,31 @@ public class PopUp : MonoBehaviour
 
     private WaitForSeconds _wait = new WaitForSeconds(1);
 
-    public void StartDisplay(bool hide, string message)
+    public void StartDisplay(bool toP1, string message, float duration)
     {
         _text.text = message;
         gameObject.SetActive(true);
-        if (hide)
-            StartCoroutine(Display());
+        StartCoroutine(Display(duration));
+    }
+
+    public void StartDisplay(bool toP1, string message)
+    {
+        _text.text = message;
+        gameObject.SetActive(true);
+        StartCoroutine(Display());
     }
 
     public void StartDisplay(string message) { StartDisplay(true, message); }
 
-    public void ChangeDuration(float duration)
-    {
-        _wait = new WaitForSeconds(duration);
-    }
-
     IEnumerator Display()
     {
         yield return _wait;
+        gameObject.SetActive(false);
+    }
+
+    IEnumerator Display(float duration)
+    {
+        yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);
     }
 }

@@ -24,18 +24,6 @@ public class GridManager : MonoBehaviour
     // Reference to the tile GameObjects
     Tile[,] _tiles;
 
-
-    private void Start()
-    {
-        // Initial sanity check statements
-        // Does the given tile prefab contain Button and Tile?
-        Debug.Assert(_tilePrefab.GetComponent<Button>() != null);
-        Debug.Assert(_tilePrefab.GetComponent<Tile>() != null);
-
-        // Do we know the GameManager?
-        Debug.Assert(_gameManager != null);
-    }
-
     // Given the dimension and the internal representation of the board,
     // extracts the necessary information and initializes the board
     public void Initialize(int dimension, (int, bool)[,] board)
