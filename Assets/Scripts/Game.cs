@@ -244,7 +244,18 @@ public class Game
 		}
         return maxReg;
     }
-
+	// Returns the possible moves of the current player given a number.
+	public List<(int,int)> possibleMoves(int number) {
+		isP1Turn = isP1;
+        List<(int,int)> moves = new List<(int,int)>();
+        for(int i = 0; i < _dim; i++){
+            for(int j = 0; j < _dim; j++){
+                if(game.IsValid((i,j),number)){
+                    moves.Add((i,j));
+                }
+            }
+        }
+    }
 
 	public int getNumberPoolSize()
 	{
