@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 /* 
  * The Game class is an abstraction of the game state.  
  */
@@ -245,17 +246,17 @@ public class Game
         return maxReg;
     }
 	// Returns the possible moves of the current player given a number.
-	/*public List<(int,int)> possibleMoves(int number) {
-		isP1Turn = isP1;
+	public List<(int,int)> possibleMoves(int number) {
         List<(int,int)> moves = new List<(int,int)>();
         for(int i = 0; i < _dim; i++){
             for(int j = 0; j < _dim; j++){
-                if(game.IsValid((i,j),number)){
+                if(IsValid((i,j),number)>0){
                     moves.Add((i,j));
                 }
             }
         }
-    }*/
+		return moves;
+    }
 
 	public int getNumberPoolSize()
 	{
