@@ -17,13 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+  	  fetch-depth: 0
           lfs: true
-      - uses: actions/cache@v2
-        with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.projectPath }}
-          restore-keys: |
-            Library-
       - uses: game-ci/unity-test-runner@v2
         id: tests
         env:
@@ -31,7 +26,6 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: ${{ matrix.projectPath }}
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
