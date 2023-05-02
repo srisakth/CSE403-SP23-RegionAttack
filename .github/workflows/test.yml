@@ -15,10 +15,16 @@ jobs:
           - playmode
           - editmode
     steps:
+      steps:
       - uses: actions/checkout@v2
         with:
-  	  fetch-depth: 0
           lfs: true
+      - uses: actions/cache@v2
+        with:
+          path: /Library
+          key: Library-
+          restore-keys: |
+            Library-
       - uses: game-ci/unity-test-runner@v2
         id: tests
         env:
