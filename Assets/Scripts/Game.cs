@@ -245,15 +245,13 @@ public class Game
 		}
         return maxReg;
     }
-
 	// Returns the possible moves of the current player given a number.
 	public List<(int,int)> PossibleMoves(int number) {
         List<(int,int)> moves = new List<(int,int)>();
         for(int i = 0; i < _dim; i++){
-            for(int j = 0; j < _dim; j++){
-                if(IsValid((i,j),number) > 0){
-					(int, int) move = (i, j);
-                    moves.Add(move);
+			for (int j = 0; j < _dim; j++) {
+                if(IsValid((i,j),number)>0){
+                    moves.Add((i,j));
                 }
             }
         }
