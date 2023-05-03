@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -57,6 +58,15 @@ public class GridManager : MonoBehaviour
             {
                 _tiles[i, j].SetNum(board[i, j]);
             }
+        }
+    }
+
+    // Highlights the given tiles
+    public void HighlightTiles(List<(int, int)> moves, bool enable)
+    {
+        foreach ((int, int) move in moves)
+        {
+            _tiles[move.Item1, move.Item2].Highlight(enable);
         }
     }
 

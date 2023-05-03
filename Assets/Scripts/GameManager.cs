@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     // Options
     bool _isOpponentAI = false;
+    bool _enableHelper = false;
     int _dim = 6;
 
 
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
     // to check for selection.
     private Tile _numTile, _boardTile;
+    private List<(int, int)> _highlightedTiles;
 
 
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
@@ -108,7 +110,6 @@ public class GameManager : MonoBehaviour
     // Terminates the game by removing any tiles in the players' hand and displaying the appropriate win message.
     public void EndGame()
     {
-        print("STOP!");
         _p1Hand.ClearHand();
         _p2Hand.ClearHand();
         _moveTimer.StopTimer();
@@ -129,10 +130,17 @@ public class GameManager : MonoBehaviour
         _isOpponentAI = isOpponentAI;
     }
 
+    public void SetHelperMode(bool enableHelper)
+    {
+        _enableHelper = enableHelper;
+    }
+
     public void SetDimension(int option)
     {
         _dim = DimOptions[option];
     }
+
+
 
     // **** Tile Selection ****
 
@@ -146,9 +154,20 @@ public class GameManager : MonoBehaviour
 
     public void SetNumber(Tile tile)
     {
+        // Unhighlight the previous tiles
+        if (_numTile != null && _enableHelper)
+            _gridManager.HighlightTiles(_highlightedTiles, false);
+
         _numTile = tile;
         if (_boardTile != null)
+        {
             MakeMove();
+        } 
+        else if (_enableHelper)
+        {
+            _highlightedTiles = _game.PossibleMoves(tile._num);
+            _gridManager.HighlightTiles(_highlightedTiles, true);
+        }
     }
 
     // With the appropriate tile and number tile selected, tries to make the move by passing it to the
@@ -222,8 +241,13 @@ public class GameManager : MonoBehaviour
         _moveTimer.ResetTimer();
         _moveTimer.transform.rotation = _game.isP1Turn ? Quaternion.Euler(0, 0, 180) : Quaternion.identity;
 
+        // Unhighlight the previous tiles
+        if (_enableHelper && _highlightedTiles != null)
+            _gridManager.HighlightTiles(_highlightedTiles, false);
+
         _boardTile = null;
         _numTile = null;
+        _highlightedTiles = null;
     }
 
 
