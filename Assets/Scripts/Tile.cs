@@ -37,6 +37,8 @@ public class Tile : MonoBehaviour
         _isP1 = tile.Item2;
         if (_num != 0)
             _text.text = _num.ToString();
+        else
+            _text.text = "";
 
         _button.colors = _isP1 ? _p1ColorBlock : _p2ColorBlock;
     }
