@@ -174,15 +174,15 @@ public class Game
 		{
 			if (IsP1Side(position) == isP1Turn)
 			{
-				return 5;   //prime rule correct
+				return 6;   //prime rule correct
 			}
 			else
 			{
-				return -5;  //prime wrong side
+				return -6;  //prime wrong side
 			}
 		}
 		else {
-			return -6; // not a prime and no extension
+			return -7; // not a prime and no extension
 		}
 	}
 
@@ -289,6 +289,7 @@ public class Game
 	// Helper function returns if a certain position contains a number of the given player
 	public bool isPlayersNumber((int, int) position, bool isP1)
 	{
+		if (!validPosition(position)) return false;
 		return board[position.Item1, position.Item2].Item1 != 0 && board[position.Item1, position.Item2].Item2 == isP1;
 	}
 	public void resetGameBoard() {

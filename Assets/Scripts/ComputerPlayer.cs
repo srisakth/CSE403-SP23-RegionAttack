@@ -34,23 +34,20 @@ public class ComputerPlayer : Player
 	}
 	public ((int, int), int) findMove() {
         //Try to extend current region
-        for (int i = 0; i < game.getDim(); i++)
-        {
-            for (int j = 0; j < game.getDim(); j++)
-            {
+        for (int i = 0; i < game.getDim(); i++){
+            for (int j = 0; j < game.getDim(); j++){
 				if (game.isPlayersNumber((i, j), false)) {
 					List<int> nums = haveMulDiv(game.board[i, j].Item1);
 					for (int l = 0; l < nums.Count; l++) {
 						int num = nums[l];
-                        if (game.IsValid((i + 1, j), num)>0) return ((i + 1, j), num);
-                        if (game.IsValid((i - 1, j), num)>0) return ((i - 1, j), num);
-                        if (game.IsValid((i, j + 1), num)>0) return ((i, j + 1), num);
-                        if (game.IsValid((i + 1, j - 1), num)>0) return ((i, j - 1), num);
+                        if (!game.isPlayersNumber((i + 1, j), false) && game.IsValid((i + 1, j), num)>0) return ((i + 1, j), num);
+                        if (!game.isPlayersNumber((i - 1, j), false) && game.IsValid((i - 1, j), num)>0) return ((i - 1, j), num);
+                        if (!game.isPlayersNumber((i, j + 1), false) && game.IsValid((i, j + 1), num)>0) return ((i, j + 1), num);
+                        if (!game.isPlayersNumber((i, j - 1), false) && game.IsValid((i + 1, j - 1), num)>0) return ((i, j - 1), num);
                     }
                 }
             }
         }
-
         //Find move prime move
         for (int i = 0; i < numberPool.Count; i++) {
 			if (game.isPrime(numberPool[i])) {
@@ -60,8 +57,17 @@ public class ComputerPlayer : Player
 				}
 			}
 		}
-
-		return ((-1,-1),0);
+        //Try to override number
+        for (int i = 0; i < game.getDim(); i++){
+            for (int j = 0; j < game.getDim(); j++){
+				if (game.isPlayersNumber((i, j), false)) {
+                    for (int n = 0; n < numberPool.Count; n++){
+						if (game.IsValid((i, j), n) > 0) return ((i, j), n);
+					}
+				}
+            }
+        }
+        return ((-1,-1),0);
 	} 
 }
 

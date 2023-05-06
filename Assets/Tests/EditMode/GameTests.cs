@@ -41,10 +41,10 @@ public class GameTests
             game.board[3,0] = (4,turns[i]);
             game.board[0,2] = (7,turns[i]);
             game.board[4,3] = (9,turns[i]);
-            Assert.AreEqual(-1,game.IsValid((1,2),2));
-            Assert.AreEqual(-2,game.IsValid((3,1),6));
-            Assert.AreEqual(-3,game.IsValid((0,0),2));
-            Assert.AreEqual(-4,game.IsValid((4,2),4));
+            Assert.AreEqual(-2,game.IsValid((1,2),2));
+            Assert.AreEqual(-3,game.IsValid((3,1),6));
+            Assert.AreEqual(-4,game.IsValid((0,0),2));
+            Assert.AreEqual(-5,game.IsValid((4,2),4));
         }
 
         // Test mult/div up, down, left, right (multiple ones) 
@@ -55,10 +55,10 @@ public class GameTests
             game.board[3,0] = (4,turns[i]);
             game.board[0,2] = (7,turns[i]);
             game.board[4,3] = (9,turns[i]);
-            Assert.AreEqual(1,game.IsValid((1,2),7));
-            Assert.AreEqual(2,game.IsValid((3,1),8));
-            Assert.AreEqual(3,game.IsValid((0,0),6));
-            Assert.AreEqual(4,game.IsValid((4,2),3)); 
+            Assert.AreEqual(2,game.IsValid((1,2),7));
+            Assert.AreEqual(3,game.IsValid((3,1),8));
+            Assert.AreEqual(4,game.IsValid((0,0),6));
+            Assert.AreEqual(5,game.IsValid((4,2),3)); 
         }
 
         // Test prime right side
@@ -69,13 +69,13 @@ public class GameTests
         for(int i = 0; i < primes.Length; i++){
             int x = random.Next(0,dim);
             int y = random.Next(boarder,dim);
-            Assert.AreEqual(5,game.IsValid((x,y), primes[i]));
+            Assert.AreEqual(6,game.IsValid((x,y), primes[i]));
         }
         game.isP1Turn = false;
         for(int i = 0; i < primes.Length; i++){
             int x = random.Next(0,dim);
             int y = random.Next(0,boarder);
-            Assert.AreEqual(5,game.IsValid((x,y), primes[i]));
+            Assert.AreEqual(6,game.IsValid((x,y), primes[i]));
         }
 
         // Test prime wrong side
@@ -84,13 +84,13 @@ public class GameTests
         for(int i = 0; i < primes.Length; i++){
             int x = random.Next(0,dim);
             int y = random.Next(0,boarder);
-            Assert.AreEqual(-5,game.IsValid((x,y), primes[i]));
+            Assert.AreEqual(-6,game.IsValid((x,y), primes[i]));
         }
         game.isP1Turn = false;
         for(int i = 0; i < primes.Length; i++){
             int x = random.Next(0,dim);
             int y = random.Next(boarder,dim);
-            Assert.AreEqual(-5,game.IsValid((x,y), primes[i]));
+            Assert.AreEqual(-6,game.IsValid((x,y), primes[i]));
         }
         // Test not prime and not extension rule
         int[] nprimes = new int[]{4,6,8,9,12};
@@ -98,7 +98,7 @@ public class GameTests
             for(int i = 0; i < nprimes.Length; i++){
                 int x = random.Next(0,dim);
                 int y = random.Next(0,dim);
-                Assert.AreEqual(-6,game.IsValid((x,y), nprimes[i]));
+                Assert.AreEqual(-7,game.IsValid((x,y), nprimes[i]));
             }
         }
         
@@ -123,13 +123,13 @@ public class GameTests
         game.board[4,4] = (11,false);
 
         game.isP1Turn = true;
-        Assert.AreEqual(3,game.IsValid((1,0),4));
-        Assert.AreEqual(1,game.IsValid((2,1),8));
-        Assert.AreEqual(1,game.IsValid((2,3),12));
+        Assert.AreEqual(4,game.IsValid((1,0),4));
+        Assert.AreEqual(2,game.IsValid((2,1),8));
+        Assert.AreEqual(2,game.IsValid((2,3),12));
         game.isP1Turn = false;
-        Assert.AreEqual(1,game.IsValid((4,1),7));
-        Assert.AreEqual(2,game.IsValid((3,2),1));
-        Assert.AreEqual(2,game.IsValid((4,5),11));
+        Assert.AreEqual(2,game.IsValid((4,1),7));
+        Assert.AreEqual(3,game.IsValid((3,2),1));
+        Assert.AreEqual(3,game.IsValid((4,5),11));
     }
     [Test]
     public void CountScoreTestsBasic() {
