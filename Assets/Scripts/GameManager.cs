@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     // Options
     bool _isOpponentAI = false;
+    bool _isOnline = false;
     bool _enableHelper = false;
     int _dim = 6;
 
@@ -44,41 +45,24 @@ public class GameManager : MonoBehaviour
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
     public void StartGame()
     {
-        // Wipe out any previous stuff
-        _gridManager.Clear();
+        // Initialize the board tiles
+        _gridManager.Initialize(_dim);
 
-        // Make a new game
-        _game = new Game(_dim, _isOpponentAI);
-
-        // Use the game to initialize the board UI
-        _gridManager.Initialize(_dim, _game.board);
-
-        _result.SetActive(false);
-
-        // Set the initial score
-        _score.SetScore(0, 0);
-
-        // Alert the first player
-        string player = _game.isP1Turn ? "1" : "2";
-
-        _popup.StartDisplay(true, $"Player {player}'s Turn!");
-
-        _moveTimer.StartTimer();
-        _gameTimer.StartTimer();
-
-        EndMove();
+        // Start the game
+        RestartGame();
     }
 
     // Method to restart the game. Assumes that (1) there was a game played previously, and
     // (2) the grid dimensions are the same
     public void RestartGame()
     {
+        // Turn off the results page
         _result.SetActive(false);
         
         // Make a new game
         _game = new Game(_dim, _isOpponentAI);
 
-        // We already have tiles, so we'll just reset it
+        // Sync the board information
         _gridManager.UpdateGrid(_game.board);
 
         // Set the initial score
@@ -94,6 +78,7 @@ public class GameManager : MonoBehaviour
         EndMove();
     }
 
+    // Pauses the timers temporalily if pause is true. Else, restarts the timers.
     public void PauseGame(bool pause)
     {
         if (pause)
@@ -140,8 +125,6 @@ public class GameManager : MonoBehaviour
         _dim = DimOptions[option];
     }
 
-
-
     // **** Tile Selection ****
 
     // Keeps track of the position within the grid
@@ -149,7 +132,7 @@ public class GameManager : MonoBehaviour
     {
         _boardTile = tile;
         if (_numTile != null)
-            MakeMove();
+            MakeMove(_boardTile._position, _numTile._num);
     }
 
     public void SetNumber(Tile tile)
@@ -161,7 +144,7 @@ public class GameManager : MonoBehaviour
         _numTile = tile;
         if (_boardTile != null)
         {
-            MakeMove();
+            MakeMove(_boardTile._position, _numTile._num);
         } 
         else if (_enableHelper)
         {
@@ -172,11 +155,10 @@ public class GameManager : MonoBehaviour
 
     // With the appropriate tile and number tile selected, tries to make the move by passing it to the
     // Game object. If valid, then updates the board accordingly and adds the new number to the opponent's deck.
-    private void MakeMove()
+    private void MakeMove((int, int) position, int num)
     {
-        Debug.Assert(_boardTile != null && _numTile != null);
-        int num = _game.MakeMove(_boardTile._position, _numTile._num);
-        if (num > 0)
+        int res = _game.MakeMove(position, num);
+        if (res > 0)
         {
             // Update the board
             _gridManager.UpdateGrid(_game.board);
@@ -188,7 +170,7 @@ public class GameManager : MonoBehaviour
         } else
         {
             string message;
-            switch(num)
+            switch(res)
             {
                 case 0: 
                     message = "Invalid Position!";
@@ -221,6 +203,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Flips the players' turns and ends the move
     public void Skip()
     {
         _game.isP1Turn = !_game.isP1Turn;
@@ -236,18 +219,45 @@ public class GameManager : MonoBehaviour
 
         // Enable/disable the hands
         _p1Hand.SetEnable(_game.isP1Turn);
-        _p2Hand.SetEnable(!_game.isP1Turn);
-
-        _moveTimer.ResetTimer();
-        _moveTimer.transform.rotation = _game.isP1Turn ? Quaternion.Euler(0, 0, 180) : Quaternion.identity;
+        _p2Hand.SetEnable(!_game.isP1Turn && !_isOpponentAI);
 
         // Unhighlight the previous tiles
         if (_enableHelper && _highlightedTiles != null)
             _gridManager.HighlightTiles(_highlightedTiles, false);
 
+        _moveTimer.ResetTimer();
+        _moveTimer.transform.rotation = _game.isP1Turn || _isOpponentAI ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
+
         _boardTile = null;
         _numTile = null;
         _highlightedTiles = null;
+
+        // If it's p2's turn and it's computer or online, then we need to fetch the move
+        if (!_game.isP1Turn && (_isOpponentAI || _isOnline))
+        {
+            (int, int) position = (-1, -1);
+            int num = 0;
+            if (_isOpponentAI)
+            {
+                ComputerPlayer cp = (ComputerPlayer)_game.p2;
+                ((int, int), int) move = cp.findMove();
+                position = move.Item1;
+                num = move.Item2;
+            } else
+            {
+                // Fetch the online moves
+            }
+
+            if (num > 0)
+            {
+                // The move should be valid
+                MakeMove(position, num);
+            } else
+            {
+                // We'll assume they skipped
+                Skip();
+            }
+        }
     }
 
 

@@ -12,23 +12,10 @@ public class GameScreenAdjuster : MonoBehaviour
     private static float _gridRatio = 0.8f;
     private static float _timerRatio = 0.08f;
 
-    public bool _isLandScape;
-
-    private void Start()
-    {
-        //_isLandScape = Screen.width > Screen.height;
-        //ChangePosition();
-        //Adjust();
-    }
 
     private void OnRectTransformDimensionsChange()
     {
-        if (_isLandScape != (Screen.width > Screen.height))
-        {
-            _isLandScape = Screen.width > Screen.height;
-            ChangePosition();
-        }
-            
+        ChangePosition();
         Adjust();
     }
 
@@ -47,19 +34,19 @@ public class GameScreenAdjuster : MonoBehaviour
         }
         else
         {
-            // Set P1's position to the top
+            // Set P1's position to the bottom
             RectTransform rect = gameManager._p1Hand.transform.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0.5f, 0); // pivot on bottom (since rotated)
-            rect.anchorMax = new Vector2(0.5f, 1); // anker on top
-            rect.anchorMin = new Vector2(0.5f, 1);
-            rect.rotation = Quaternion.Euler(0, 0, 180);  // Flip it
-
-            // Set P2's position to the bottom
-            rect = gameManager._p2Hand.transform.GetComponent<RectTransform>();
             rect.pivot = new Vector2(0.5f, 0);  // pivot on bottom
             rect.anchorMax = new Vector2(0.5f, 0); // Anker to the bottom of screen
             rect.anchorMin = new Vector2(0.5f, 0);
             rect.rotation = Quaternion.identity;
+
+            // Set P2's position to the top
+            rect = gameManager._p2Hand.transform.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5f, 0); // pivot on bottom (since rotated)
+            rect.anchorMax = new Vector2(0.5f, 1); // anker on top
+            rect.anchorMin = new Vector2(0.5f, 1);
+            rect.rotation = Quaternion.Euler(0, 0, 180);  // Flip it
 
             // Set the size and position of the timers
             _moveTimer.pivot = Vector2.one * 0.5f;  // Pivot on center
@@ -96,11 +83,12 @@ public class GameScreenAdjuster : MonoBehaviour
             // Adjust the size
             RectTransform rect = gameManager._p1Hand.transform.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(gridSize, height);
-            rect.anchoredPosition = new Vector3(0, -height, 0);
+            rect.anchoredPosition = new Vector3(0, height, 0);
 
             rect = gameManager._p2Hand.transform.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(gridSize, height);
-            rect.anchoredPosition = new Vector3(0, height, 0);
+            rect.anchoredPosition = new Vector3(0, -height, 0);
+
 
             _gameTimer.sizeDelta = new Vector2(gridSize / 2, Screen.width * _timerRatio);
             _gameTimer.anchoredPosition = new Vector3(-Screen.width * (1 - _gridRatio)/4, 0, 0);
