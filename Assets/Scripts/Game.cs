@@ -155,7 +155,7 @@ public class Game
         {
             if (!comp[i])
             {
-                return -(i + 1); // the tile corresponding to i+1 contains a conflicting number
+                return -(i + 2); // the tile corresponding to i+1 contains a conflicting number
             }
         }
         //Check multiple divisor rule
@@ -166,7 +166,7 @@ public class Game
         divmul[3] = isDivMul((position.Item1, position.Item2 + 1), number);
 		for (int i = 0; i < 4; i++) {
 			if (divmul[i]) {
-				return i + 1;
+				return i + 2;
 			}
 		}
 		//Check prime rule
