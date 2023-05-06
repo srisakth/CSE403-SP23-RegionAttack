@@ -10,8 +10,8 @@ public class Game
 	int _dim;
 
 	// Variables (Game Board, Players)
-	protected internal Player p1;
-	protected internal Player p2;
+	public Player p1;
+	public Player p2;
 	public bool isP1Turn;
 
 	// The board stores (1) the number stored in the board and (2) whether that number is P1's number.
