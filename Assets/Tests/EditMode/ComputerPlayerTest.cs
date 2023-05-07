@@ -11,20 +11,25 @@ public class ComputerPlayerTests
     public void ComPlayerTestsSimplePasses()
     {
         // Use the Assert class to test conditions
-        Game game = new Game(6, true);
-        game.resetGameBoard();
-        ComputerPlayer cp = (ComputerPlayer)game.p2;
-        // Check if moves are valid
-        for (int i = 0; i < 100; i++)
+
+
+        for (int numGams = 0; numGams < 10; numGams++)
         {
-            ((int, int), int) m = cp.findMove();
-            if (m.Item2 != -1)
+            Game game = new Game(6, true);
+            game.resetGameBoard();
+            ComputerPlayer cp = (ComputerPlayer)game.p2;
+            // Check if moves are valid
+            game.isP1Turn = false;
+            for (int i = 0; i < 100; i++)
             {
-                game.isP1Turn = false;
-                Assert.True(game.IsValid(m.Item1, m.Item2) > 0);
+                ((int, int), int) m = cp.findMove();
+                if (m.Item2 != 0)
+                {
+
+                    Assert.True(game.IsValid(m.Item1, m.Item2) > 0);
+                }
+
             }
-
         }
-
     }
 }
