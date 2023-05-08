@@ -46,11 +46,6 @@ public class Game
 
 		// Decide which player is playing first
 		isP1Turn = random.Next(0, 2) == 0;
-
-		if (isP1Turn)
-			p1.addNum(random.Next(1, maxNumber + 1));
-		else
-			p2.addNum(random.Next(1, maxNumber + 1));
 	}
 
 	// Tries to make a move for the current player with the given number.
