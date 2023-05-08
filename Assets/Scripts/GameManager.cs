@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     private Tile _numTile, _boardTile;
     private List<(int, int)> _highlightedTiles;
 
+    private WaitForSeconds _wait = new WaitForSeconds(2);
 
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
@@ -132,7 +133,7 @@ public class GameManager : MonoBehaviour
     {
         _boardTile = tile;
         if (_numTile != null)
-            MakeMove(_boardTile._position, _numTile._num);
+            StartCoroutine(MakeMove(_boardTile._position, _numTile._num));
     }
 
     public void SetNumber(Tile tile)
@@ -144,7 +145,7 @@ public class GameManager : MonoBehaviour
         _numTile = tile;
         if (_boardTile != null)
         {
-            MakeMove(_boardTile._position, _numTile._num);
+            StartCoroutine(MakeMove(_boardTile._position, _numTile._num));
         } 
         else if (_enableHelper)
         {
@@ -155,7 +156,7 @@ public class GameManager : MonoBehaviour
 
     // With the appropriate tile and number tile selected, tries to make the move by passing it to the
     // Game object. If valid, then updates the board accordingly and adds the new number to the opponent's deck.
-    private void MakeMove((int, int) position, int num)
+    private IEnumerator MakeMove((int, int) position, int num)
     {
         int res = _game.MakeMove(position, num);
         if (res > 0)
@@ -165,6 +166,10 @@ public class GameManager : MonoBehaviour
 
             // Update the score
             _score.SetScore(_game.p1.getScore(), _game.p2.getScore());
+
+            // If it was P2's turn and it's AI, then pause for a bit
+            if (_game.isP1Turn && _isOpponentAI)
+                yield return _wait;
 
             EndMove();
         } else
@@ -243,6 +248,8 @@ public class GameManager : MonoBehaviour
                 ((int, int), int) move = cp.findMove();
                 position = move.Item1;
                 num = move.Item2;
+
+
             } else
             {
                 // Fetch the online moves
@@ -251,13 +258,18 @@ public class GameManager : MonoBehaviour
             if (num > 0)
             {
                 // The move should be valid
-                MakeMove(position, num);
+                StartCoroutine(MakeMove(position, num));
             } else
             {
                 // We'll assume they skipped
                 Skip();
             }
         }
+    }
+
+    IEnumerator Wait()
+    {
+        yield return _wait;
     }
 
 
