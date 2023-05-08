@@ -22,3 +22,12 @@ The game can teach kids basic mathematical concepts while having fun, and can ke
 The repository itself is a Unity project based on Unity version 2021.3.22. There is one directory for the weekly status reports called `reports`, and the rest are standard Unity project files. Most directories should not be altered as much to avoid confusion. For most of this project, everything that will/should be altered will reside in the `Assets` directory, where C# scripts will be kept in `Scripts` and prefabs will be kept in `Prefabs`.
 
 To use git with Unity, the local repository may need to have [Git LFS](https://git-lfs.com/) installed and initialized. Additionally, there must be extra precautions made if modifying the included `.gitignore` and `.gitattributes` files as it may cause git to track unnecessary files or not use git LFS for large files.
+
+## Project progress
+Here you will find a list of usecases for our application. Alongside with them are you will find the progress on each of them
+- UC1: Play with friend in-person - Is fully working. Once the system is running two players can play a local game on the device it is running on.
+- UC2: Play against Computer - Is fully working. Once the system is running a single player can play against a computer version. Note however that this computer player is following very simple rules.
+- UC3: Learn the game - A tutroial mode for the game is currently being implemented and will be deployed soon.
+- UC4: Play with a friend online - Currently further implementing the online mode is blocked by server setup.
+- UC5: Add a friend online - Same progress as for UC4.
+- UC6: Find a random Opponent - Same progress as for UC5.
