@@ -10,7 +10,32 @@ public class PlayerTests
     [Test]
     public void TestMovePossible()
     {
-        /*    int numGames = 25;
+        for (int j = 0; j < 10; j++)
+        {
+            Game game = new Game(6, false);
+            bool isP1 = game.isP1Turn;
+            List<((int, int), int)> pm1 = game.p1.PossibleMoves();
+            for (int i = 0; i < pm1.Count; i++)
+            {
+                game.IsValid(pm1[i].Item1, pm1[i].Item2, isP1);
+            }
+            List<((int, int), int)> pm2 = game.p2.PossibleMoves();
+            for (int i = 0; i < pm2.Count; i++)
+            {
+                game.IsValid(pm2[i].Item1, pm2[i].Item2, !isP1);
+            }
+        }
+    }
+
+    [Test]
+    public void TestAllMovesPossible()
+    {
+        Game game = new Game(6, false);
+
+    }
+}
+
+/*    int numGames = 25;
             int numMoves = 5;
             for (int i = 0; i < numGames; i++)
             {
@@ -47,12 +72,3 @@ public class PlayerTests
                     Assert.True(m2 > 0);
                 }
             }*/
-
-    }
-    [Test]
-    public void TestAllMovesPossible()
-    {
-        Game game = new Game(6, false);
-
-    }
-}
