@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
         } 
         else if (_enableHelper)
         {
-            _highlightedTiles = _game.PossibleMoves(tile._num);
+            _highlightedTiles = _game.PossibleMoves(tile._num,_game.isP1Turn);
             _gridManager.HighlightTiles(_highlightedTiles, true);
         }
     }
