@@ -26,7 +26,7 @@ public class ComputerPlayerTests
                 if (m.Item2 != 0)
                 {
 
-                    Assert.True(game.IsValid(m.Item1, m.Item2) > 0);
+                    Assert.True(game.IsValid(m.Item1, m.Item2, game.isP1Turn) > 0);
                 }
 
             }

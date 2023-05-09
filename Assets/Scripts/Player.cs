@@ -20,7 +20,6 @@ public class Player
     {
         return numberPool.Contains(number);
     }
-
     public void addNum(int number)
     {
         numberPool.Add(number);
@@ -48,6 +47,23 @@ public class Player
     public void setScore(int score)
     {
         curScore = score;
+    }
+    public List<((int, int), int)> PossibleMoves() {
+        List<((int, int), int)> allMoves = new List<((int, int), int)>();
+        for (int i = 0; i < numberPool.Count; i++)
+        {
+            int num = numberPool[i];
+            for (int l = 0; l < game.getDim(); l++) {
+                for (int k = 0; k < game.getDim(); k++)
+                {
+                    if (game.IsValid((l, k), num, this.id == 1)>0) {
+                        allMoves.Add(((l,k),num));
+                    }
+                }
+            }
+        }
+        
+        return allMoves;
     }
     public List<int> getNumberPool() {
         return numberPool;

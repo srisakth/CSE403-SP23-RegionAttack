@@ -14,7 +14,7 @@ public class ComputerPlayer : Player
 			int x = random.Next(0, game.getDim() / 2);
 			int y = random.Next(0, game.getDim());
 
-			if (game.IsValid((x, y), prime)>0)
+			if (game.IsValid((x, y), prime, id == 1) >0)
 			{
 				return ((x, y), prime);
 			}
@@ -40,10 +40,10 @@ public class ComputerPlayer : Player
 					List<int> nums = haveMulDiv(game.board[i, j].Item1);
 					for (int l = 0; l < nums.Count; l++) {
 						int num = nums[l];
-                        if (!game.isPlayersNumber((i + 1, j), false) && game.IsValid((i + 1, j), num)>0) return ((i + 1, j), num);
-                        if (!game.isPlayersNumber((i - 1, j), false) && game.IsValid((i - 1, j), num)>0) return ((i - 1, j), num);
-                        if (!game.isPlayersNumber((i, j + 1), false) && game.IsValid((i, j + 1), num)>0) return ((i, j + 1), num);
-                        if (!game.isPlayersNumber((i, j - 1), false) && game.IsValid((i + 1, j - 1), num)>0) return ((i, j - 1), num);
+                        if (!game.isPlayersNumber((i + 1, j), false) && game.IsValid((i + 1, j), num,id==1)>0) return ((i + 1, j), num);
+                        if (!game.isPlayersNumber((i - 1, j), false) && game.IsValid((i - 1, j), num, id == 1) >0) return ((i - 1, j), num);
+                        if (!game.isPlayersNumber((i, j + 1), false) && game.IsValid((i, j + 1), num, id == 1) >0) return ((i, j + 1), num);
+                        if (!game.isPlayersNumber((i, j - 1), false) && game.IsValid((i + 1, j - 1), num, id == 1) >0) return ((i, j - 1), num);
                     }
                 }
             }
@@ -60,9 +60,9 @@ public class ComputerPlayer : Player
         //Try to override number
         for (int i = 0; i < game.getDim(); i++){
             for (int j = 0; j < game.getDim(); j++){
-				if (game.isPlayersNumber((i, j), false)) {
+				if (game.isPlayersNumber((i, j), id==1)) {
                     for (int n = 0; n < numberPool.Count; n++){
-						if (game.IsValid((i, j), n) > 0) return ((i, j), n);
+						if (game.IsValid((i, j), n, id == 1) > 0) return ((i, j), n);
 					}
 				}
             }
