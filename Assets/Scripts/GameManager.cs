@@ -100,9 +100,14 @@ public class GameManager : MonoBehaviour
         _p2Hand.ClearHand();
         _moveTimer.StopTimer();
 
+        // Unhighlight the previous tiles
+        if (_enableHelper && _highlightedTiles != null)
+            _gridManager.HighlightTiles(_highlightedTiles, false);
+
         // Make the references null just in case
         _boardTile = null;
         _numTile = null;
+        _highlightedTiles = null;
 
         _result.SetActive(true);
         _resultScore.SetScore(_game.p1.getScore(), _game.p2.getScore());
