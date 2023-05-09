@@ -40,21 +40,12 @@ public class Game
 				board[i, j] = (0, IsP1Side((i, j)));
 			}
 		}
-
+		genNumberPool(p1);
+		genNumberPool(p2);
 		// Add the initial hand
-		for (int i = 0; i < initPoolSize; i++)
-		{
-			p1.addNum(random.Next(1, maxNumber + 1));
-			p2.addNum(random.Next(1, maxNumber + 1));
-		}
 
 		// Decide which player is playing first
 		isP1Turn = random.Next(0, 2) == 0;
-
-		if (isP1Turn)
-			p1.addNum(random.Next(1, maxNumber + 1));
-		else
-			p2.addNum(random.Next(1, maxNumber + 1));
 	}
 
 	// Tries to make a move for the current player with the given number.
@@ -62,24 +53,24 @@ public class Game
 	// If it is valid, then it updates the internal board and score accordingly and return the new number for the current player.
 
 	public int MakeMove((int, int) position, int number) {
-		int x = IsValid(position, number);
+		int x = IsValid(position, number, isP1Turn);
         if (x <= 0)
 		{
 			return x;
 		}
 		board[position.Item1, position.Item2] = (number, isP1Turn);
 
-		int newNum = random.Next(1, maxNumber + 1);
 		// Remove the used tile and add a new tile
+		int num = 0;
 		if (isP1Turn)
 		{
 			p1.removeNum(number);
-			p1.addNum(newNum);
+			num = addNewNumber(p1);
 		}
 		else
 		{
 			p2.removeNum(number);
-			p2.addNum(newNum);
+			num = addNewNumber(p2);
 		}
 
 		// Update the scores
@@ -89,7 +80,10 @@ public class Game
 		// Switch turns
 		isP1Turn = !isP1Turn;
 
-		return newNum;
+		// Regenerate Numbers if no moves are possible
+		if (isP1Turn) reGenNumberPool(p1);
+		else reGenNumberPool(p2);
+		return num;
 	}
 	public String TerminateGame() {
 		if (p1.getScore() > p2.getScore())
@@ -123,9 +117,9 @@ public class Game
 		
 	}
 
-	private bool isCompatible((int, int) position, int number)
+	private bool isCompatible((int, int) position, int number, bool isP1)
 	{
-		if (!validPosition(position) || !isPlayersNumber(position,isP1Turn)){
+		if (!validPosition(position) || !isPlayersNumber(position, isP1)){
 			return true;
 		}else if (isDivMul(position, number)) {
 			return true;
@@ -134,23 +128,23 @@ public class Game
 		}
 	}
 
-	public int IsValid((int, int) position, int number) {
+	public int IsValid((int, int) position, int number, bool isP1) {
 		//Check current value of cell:
 		if (!validPosition(position))
 		{
 			return 0;	//invalid position (outside board)
 		}
 		//Oponent larger number
-		if (!isPlayersNumber(position, isP1Turn) && board[position.Item1, position.Item2].Item1 >= number)
+		if (!isPlayersNumber(position, isP1) && board[position.Item1, position.Item2].Item1 >= number)
 		{
 			return -1;	//position contains larger or equal oponent number
 		}
         //Check conflict with adjacent numbers
         bool[] comp = new bool[4];
-		comp[0] = isCompatible((position.Item1 - 1, position.Item2), number);
-		comp[1] = isCompatible((position.Item1, position.Item2 - 1), number);
-		comp[2] = isCompatible((position.Item1 + 1, position.Item2), number);
-		comp[3] = isCompatible((position.Item1, position.Item2 + 1), number);
+		comp[0] = isCompatible((position.Item1 - 1, position.Item2), number, isP1);
+		comp[1] = isCompatible((position.Item1, position.Item2 - 1), number, isP1);
+		comp[2] = isCompatible((position.Item1 + 1, position.Item2), number, isP1);
+		comp[3] = isCompatible((position.Item1, position.Item2 + 1), number, isP1);
         for (int i = 0; i < 4; i++)
         {
             if (!comp[i])
@@ -229,7 +223,39 @@ public class Game
         }
         return regSize;
 	}
-
+	public void reGenNumberPool(Player p) {
+		while (p.PossibleMoves().Count == 0){
+            p.numberPool = new List<int>();
+            for (int i = 0; i < initPoolSize; i++)
+			{
+				p.addNum(random.Next(1, maxNumber + 1));
+			}
+		}
+    }
+	public void genNumberPool(Player p) {
+        for (int i = 0; i < initPoolSize; i++)
+        {
+            p.addNum(random.Next(1, maxNumber + 1));
+        }
+		while (!p.getNumberPool().Exists(x => isPrime(x))) {
+			p.getNumberPool().RemoveAt(0);
+			p.addNum(random.Next(1, maxNumber + 1));
+		}
+    }
+	public int addNewNumber(Player p) {
+		int x = 0;
+        if (p.PossibleMoves().Count > 0){
+			x = random.Next(1, maxNumber + 1);
+		}else { 
+			x = random.Next(1,maxNumber+1);
+			while (PossibleMoves(x,p.id==1).Count == 0)
+			{
+				x = random.Next(1, maxNumber + 1);
+			}
+        }
+		p.addNum(x);
+		return x;
+    }
 	// Computes score of given player
     public int ComputeScore(bool isP1)
     {
@@ -245,12 +271,12 @@ public class Game
 		}
         return maxReg;
     }
-	// Returns the possible moves of the current player given a number.
-	public List<(int,int)> PossibleMoves(int number) {
+	// Returns the possible moves of the given player given a number.
+	public List<(int,int)> PossibleMoves(int number, bool isP1) {
         List<(int,int)> moves = new List<(int,int)>();
         for(int i = 0; i < _dim; i++){
 			for (int j = 0; j < _dim; j++) {
-                if(IsValid((i,j),number)>0){
+                if(IsValid((i,j),number,isP1)>0){
                     moves.Add((i,j));
                 }
             }
