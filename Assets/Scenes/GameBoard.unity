@@ -4024,14 +4024,14 @@ MonoBehaviour:
       - m_Target: {fileID: 615388054}
         m_TargetAssemblyTypeName: GameManager, Scripts
         m_MethodName: SetHelperMode
-        m_Mode: 6
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 0
 --- !u!1 &1417601679
