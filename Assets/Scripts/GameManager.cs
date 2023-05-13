@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     private Tile _numTile, _boardTile;
     private List<(int, int)> _highlightedTiles;
 
-    private WaitForSeconds _wait = new WaitForSeconds(2);
+    private WaitForSeconds _wait = new WaitForSeconds(1.5f);
 
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
@@ -100,9 +100,14 @@ public class GameManager : MonoBehaviour
         _p2Hand.ClearHand();
         _moveTimer.StopTimer();
 
+        // Unhighlight the previous tiles
+        if (_enableHelper && _highlightedTiles != null)
+            _gridManager.HighlightTiles(_highlightedTiles, false);
+
         // Make the references null just in case
         _boardTile = null;
         _numTile = null;
+        _highlightedTiles = null;
 
         _result.SetActive(true);
         _resultScore.SetScore(_game.p1.getScore(), _game.p2.getScore());
@@ -158,6 +163,10 @@ public class GameManager : MonoBehaviour
     // Game object. If valid, then updates the board accordingly and adds the new number to the opponent's deck.
     private IEnumerator MakeMove((int, int) position, int num)
     {
+        // If it's P2's turn and it's AI, then pause for a bit
+        if (!_game.isP1Turn && _isOpponentAI)
+            yield return _wait;
+
         int res = _game.MakeMove(position, num);
         if (res > 0)
         {
@@ -166,10 +175,6 @@ public class GameManager : MonoBehaviour
 
             // Update the score
             _score.SetScore(_game.p1.getScore(), _game.p2.getScore());
-
-            // If it was P2's turn and it's AI, then pause for a bit
-            if (_game.isP1Turn && _isOpponentAI)
-                yield return _wait;
 
             EndMove();
         } else
@@ -248,8 +253,6 @@ public class GameManager : MonoBehaviour
                 ((int, int), int) move = cp.findMove();
                 position = move.Item1;
                 num = move.Item2;
-
-
             } else
             {
                 // Fetch the online moves
@@ -265,11 +268,6 @@ public class GameManager : MonoBehaviour
                 Skip();
             }
         }
-    }
-
-    IEnumerator Wait()
-    {
-        yield return _wait;
     }
 
 
