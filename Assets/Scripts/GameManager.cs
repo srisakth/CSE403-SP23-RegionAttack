@@ -253,8 +253,6 @@ public class GameManager : MonoBehaviour
                 ((int, int), int) move = cp.findMove();
                 position = move.Item1;
                 num = move.Item2;
-
-
             } else
             {
                 // Fetch the online moves
@@ -270,11 +268,6 @@ public class GameManager : MonoBehaviour
                 Skip();
             }
         }
-    }
-
-    IEnumerator Wait()
-    {
-        yield return _wait;
     }
 
 
