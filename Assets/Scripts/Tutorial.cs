@@ -11,6 +11,7 @@ public class Tutorial : MonoBehaviour
 
     // Access to the game manager
     public GameManager _gameManager;
+    public GameOption _gameOption;
 
     // Tutorial text
     public PopUp _popUp;
@@ -32,6 +33,12 @@ public class Tutorial : MonoBehaviour
 
     public void StartTutorial()
     {
+        // Set the default options
+        _gameOption.SetPlayerMode(false);
+        _gameOption.SetOnlineMode(false);
+        _gameOption.SetHelperMode(true);
+        _gameOption.SetDimension(1);
+
         // Start a new game
         _gameManager.StartGame();
 
@@ -57,8 +64,16 @@ public class Tutorial : MonoBehaviour
         if (_index == _messages.Length)
         {
             // The player decided to still play
-            _gameManager.SetPlayerMode(true);
+            _gameOption.SetPlayerMode(true);
             _popUp.gameObject.SetActive(false);
+
+            // Instantiate a Computer player
+            Player computer = new ComputerPlayer(1, _game);
+            computer.numberPool = _game.p2.numberPool;
+            _game.p2 = computer;
+            _gameManager.SetGame(_game);
+            _gameManager._gameTimer.ResetTimer();
+
             return;
         }
 

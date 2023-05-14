@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameOption : MonoBehaviour
 {
     // Options
-    bool _isOpponentAI = false;
-    bool _isOnline = false;
-    bool _enableHelper = false;
-    int _dim = 6;
+    public bool _isOpponentAI = false;
+    public bool _isOnline = false;
+    public bool _enableHelper = false;
+    public int _dim = 6;
 
     // UI components
-
+    public Toggle _AIToggle, _onlineToggle, _helperToggle;
+    public TMP_Dropdown _dimDropdown;
 
 
     // Option possibilities
@@ -22,15 +25,24 @@ public class GameOption : MonoBehaviour
     public void SetPlayerMode(bool isOpponentAI)
     {
         _isOpponentAI = isOpponentAI;
+        _AIToggle.isOn = isOpponentAI;
     }
 
     public void SetHelperMode(bool enableHelper)
     {
         _enableHelper = enableHelper;
+        _helperToggle.isOn = enableHelper;
+    }
+
+    public void SetOnlineMode(bool isOnline)
+    {
+        _isOnline  = isOnline;
+        _onlineToggle.isOn = isOnline;
     }
 
     public void SetDimension(int option)
     {
         _dim = DimOptions[option];
+        _dimDropdown.value = option;
     }
 }
