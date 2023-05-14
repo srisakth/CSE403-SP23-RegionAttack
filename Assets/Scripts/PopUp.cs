@@ -6,21 +6,26 @@ using TMPro;
 public class PopUp : MonoBehaviour
 {
     public TMP_Text _text;
-
+    public bool _default = false;
+    public float _duration = 1;
     private WaitForSeconds _wait = new WaitForSeconds(1);
-
-    public void StartDisplay(bool toP1, string message, float duration)
-    {
-        _text.text = message;
-        gameObject.SetActive(true);
-        StartCoroutine(Display(duration));
-    }
 
     public void StartDisplay(bool toP1, string message)
     {
         _text.text = message;
-        gameObject.SetActive(true);
+        gameObject.SetActive(!_default);
         StartCoroutine(Display());
+    }
+
+    public void SetDuration(float duration)
+    {
+        _duration = duration;
+        _wait = new WaitForSeconds(duration);
+    }
+
+    public void SetMessage(string message)
+    {
+        _text.text = message;
     }
 
     public void StartDisplay(string message) { StartDisplay(true, message); }
@@ -28,12 +33,6 @@ public class PopUp : MonoBehaviour
     IEnumerator Display()
     {
         yield return _wait;
-        gameObject.SetActive(false);
-    }
-
-    IEnumerator Display(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        gameObject.SetActive(false);
+        gameObject.SetActive(_default);
     }
 }

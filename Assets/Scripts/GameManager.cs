@@ -53,6 +53,21 @@ public class GameManager : MonoBehaviour
         RestartGame();
     }
 
+    // Given a game state, updates the view based on it.
+    public void SetGame(Game game)
+    {
+        _game = game;
+
+        // Update the view to reflect the new game state
+        // Sync the board information
+        _gridManager.UpdateGrid(_game.board);
+
+        // Set the score
+        _score.SetScore(game.p1.getScore(), game.p2.getScore());
+
+        EndMove();
+    }
+
     // Method to restart the game. Assumes that (1) there was a game played previously, and
     // (2) the grid dimensions are the same
     public void RestartGame()
@@ -63,6 +78,11 @@ public class GameManager : MonoBehaviour
         // Make a new game
         _game = new Game(_dim, _isOpponentAI);
 
+        if (_isOnline)
+        {
+            // TODO: Fetch the board and hand state
+        }
+
         // Sync the board information
         _gridManager.UpdateGrid(_game.board);
 
@@ -72,7 +92,7 @@ public class GameManager : MonoBehaviour
         // Alert the first player
         string player = _game.isP1Turn ? "1" : "2";
 
-        _popup.StartDisplay(true, $"Player {player}'s Turn!");
+        _popup.StartDisplay(_game.isP1Turn, $"Player {player}'s Turn!");
 
         _gameTimer.ResetTimer();
 
