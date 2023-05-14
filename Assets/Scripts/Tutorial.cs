@@ -61,7 +61,7 @@ public class Tutorial : MonoBehaviour
 
     public void Continue()
     {
-        if (_index == _messages.Length)
+        if (_index == _messages.Length - 1)
         {
             // The player decided to still play
             _gameOption.SetPlayerMode(true);
