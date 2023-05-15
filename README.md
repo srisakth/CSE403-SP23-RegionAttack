@@ -24,7 +24,7 @@ The repository itself is a Unity project based on Unity version 2021.3.22. There
 To use git with Unity, the local repository may need to have [Git LFS](https://git-lfs.com/) installed and initialized. Additionally, there must be extra precautions made if modifying the included `.gitignore` and `.gitattributes` files as it may cause git to track unnecessary files or not use git LFS for large files.
 
 ## Project progress
-Here you will find a list of usecases for our application. Alongside with them are you will find the progress on each of them
+Here you will find a list of usecases for our application. Alongside with them you will find the progress on each of them
 - UC1: Play with friend in-person - Is fully working. Once the system is running two players can play a local game on the device it is running on.
 - UC2: Play against Computer - Is fully working. Once the system is running a single player can play against a computer version. Note however that this computer player is following very simple rules.
 - UC3: Learn the game - A tutroial mode for the game is currently being implemented and will be deployed soon.
@@ -36,41 +36,41 @@ Here you will find a list of usecases for our application. Alongside with them a
 If you are a new developer on this team or if you have forked this project and want to start working on it, this file contains all neccesary information to do so. 
 
 ## Setup
-This project uses Unity and all requirements you need on your machine to get strated stem from this framework. In the following all components that are needed are listed:
+This project uses Unity and all requirements you need on your machine to get started stem from this framework. In the following all components that are needed are listed:
 - [Unity Hub](https://unity.com/download): Install Unity Hub on your machine. If you are a student you can sign up for the [student plan](https://unity.com/products/unity-student) 
 to get pro features for free.
 - [Visual Studio](https://visualstudio.microsoft.com/downloads/): You need and IDE with Unity support for scripting. We recommend Visual Studio, but feel free to choose any other 
 that meets the requirements.
 - Unity Editor Version 2021.3.22f1: This is the version used for the project. If you choose another version complications cannot be ruled out.
-- GitHub: For convenience install git on your local machine to easily interact with the repository. The command to use in the terminal varies depending on your machine, see also
-[here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-- If you want to build for iOS: You will need to install Xcode as well, which can be downloaded in the Appstore. Note however that in order to do so you need to work on a Mac.
+  - If you want to build for iOS: You will need to install Xcode as well, which can be downloaded in the App Store. Note however that in order to do so you need to work on a Mac.
 Further you will need to install the iOS build support in Unity Hub.
-- If you want to build for Android: You will need to install the 
+  - If you want to build for Android: You will need to install the 
 [Android Studio](https://developer.android.com/studio?gclid=Cj0KCQjwu-KiBhCsARIsAPztUF3tI5ZMkR-qJYwDyOcMGLjgw4UNVCBeT1SYdJGsqf-ntpcNDqVp-GcaAolpEALw_wcB&gclsrc=aw.ds). 
 Further you will need to install the Android build support in Unity Hub.
+- GitHub: For convenience install git on your local machine to easily interact with the repository. The command to use in the terminal varies depending on your machine, see also
+[here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 Once all these requirements are met you can clone the repository to your local machine and open the project in Unity Hub.
 
 ## Testing the system
-There are two ways to test your changes. Number one, you push them back to GitHub. As soon as you do so a GitHub Action workflow will run all tests that are available in the 
+There are two ways to test your changes: 
+1. Push them back to GitHub. As soon as you do so a GitHub Action workflow will run all tests that are available in the 
 project.
-<br>
-You can also run your tests locally. In the opened unity project open Window => General => Testrunner which will open the Testrunner. In this view you will see a 
+2. You can run your tests locally. In the opened unity project open Window => General => Testrunner which will open the Testrunner. In this view you will see a 
 hierarchy of tests. By double clicking on some element in this hierarchy all tests in test classes 
 beneath it will be executed and either marked as red if failed or green if passed.
 
 ## Building the system
-There are two potential ways to obtain the build for your target platform. Either you download the latest build from GitHub for your target platform. These builds 
-are created by the GitHub Action [Build Project](https://github.com/oagenoagemono/CSE403-SP23-RegionAttack/actions/workflows/build.yml) and provide a 
-builds for iOS, Android, and Windows. <br>
-Or you can also make your own build in the opened unity project. To do so follow these steps
-- Select File => Build Settings
-- Under Scenes in Build make sure that Scenes/GameBoard is selected
-- Under Platform select the platform you want to build for and click change platform. If you haven't installed the build support in the setup step you will be prompted to do so
-- Click Build and built to your target folder - !!If you want to run it on an android device don't do this but immediately go to the section "Running the system" from here on!!
-- Refer to the section "Running the system" to run your build
+There are two potential ways to obtain the build for your target platform. 
+1. Download the latest build from GitHub for your target platform. These builds 
+are created by the GitHub Action [Build Project](https://github.com/RegionAttack/CSE403-SP23-RegionAttack/actions/workflows/build.yml) and provide 
+builds for iOS, Android, and Windows.
+2. You can also make your own build in the opened unity project. To do so follow these steps
+  - Select File => Build Settings
+  - Under Scenes in Build make sure that Scenes/GameBoard is selected
+  - Under Platform select the platform you want to build for and click change platform. If you haven't installed the build support in the setup step you will be prompted to do so
+  - Click Build and built to your target folder - !!If you want to run it on an android device don't do this but immediately go to the section "Running the system" from here on!!
+  - Refer to the section "Running the system" to run your build
 
 ## Running the system
 For just making a test run of the system, in order to observe local changes quickly, you can switch to playmode in unity which demonstrates the current behaviour of the game. 
