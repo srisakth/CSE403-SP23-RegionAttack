@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 79929598}
+  _container: {fileID: 0}
   _default: 1
   _duration: 1
 --- !u!114 &30676884
@@ -737,6 +738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 281180603}
+  _container: {fileID: 0}
   _default: 0
   _duration: 1
 --- !u!114 &281180603
@@ -1407,6 +1409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 354444632}
+  _container: {fileID: 424902456}
   _default: 0
   _duration: 1
 --- !u!114 &424902459
@@ -1885,7 +1888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 615388054}
   _gameOption: {fileID: 615388059}
-  _popUp: {fileID: 30676883}
+  _popUp: {fileID: 1739663723}
   _homeButton: {fileID: 1502749289}
   _script: {fileID: 4900000, guid: 02eb7e745706843419d283ad8ec1273a, type: 3}
   _messages: []
@@ -6704,6 +6707,7 @@ GameObject:
   - component: {fileID: 1739663719}
   - component: {fileID: 1739663718}
   - component: {fileID: 1739663722}
+  - component: {fileID: 1739663723}
   m_Layer: 5
   m_Name: GameCanvas
   m_TagString: Untagged
@@ -6818,6 +6822,22 @@ MonoBehaviour:
   _gameManager: {fileID: 615388054}
   _moveTimer: {fileID: 1187478023}
   _gameTimer: {fileID: 966437778}
+--- !u!114 &1739663723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739663717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d97085a718e1347b52e49d1388e72b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 79929598}
+  _container: {fileID: 30676881}
+  _default: 1
+  _duration: 1
 --- !u!1 &1750490374
 GameObject:
   m_ObjectHideFlags: 0
@@ -9493,6 +9513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 2080859114}
+  _container: {fileID: 0}
   _default: 0
   _duration: 1
 --- !u!114 &2080859114

@@ -29,6 +29,9 @@ public class Tutorial : MonoBehaviour
             // Load the messages from the text file
             _messages = _script.text.Split('\n');
         }
+
+        _popUp.SetDuration(3);
+        _popUp._default = true;
     }
 
     public void StartTutorial()
@@ -55,17 +58,17 @@ public class Tutorial : MonoBehaviour
         _gameManager.PauseGame(true);
 
         _index = 0;
-        _popUp.gameObject.SetActive(true);
+        _popUp._container.SetActive(true);
         Continue();
     }
 
     public void Continue()
     {
-        if (_index == _messages.Length - 1)
+        // The player decided to still play
+        if (_index == _messages.Length)
         {
-            // The player decided to still play
             _gameOption.SetPlayerMode(true);
-            _popUp.gameObject.SetActive(false);
+            _popUp._container.SetActive(false);
 
             // Instantiate a Computer player
             Player computer = new ComputerPlayer(1, _game);
@@ -77,12 +80,26 @@ public class Tutorial : MonoBehaviour
             return;
         }
 
-        _popUp.SetMessage(_messages[_index++]);
+        _popUp.SetMessage(_messages[_index]);
 
+        // Condition to activate the home button
         if (_index == _messages.Length - 1)
         {
             // display the Home button
             _homeButton.gameObject.SetActive(true);
         }
+
+        // Display the board for a moment
+        if (_index == 4 || _index == 16 || _index == 22)
+        {
+            _popUp.StartDisplay(_messages[_index]);
+        }
+
+        // Make a move for the opponent
+        if (_index == 16 || _index == 22)
+        {
+
+        }
+        _index++;
     }
 }

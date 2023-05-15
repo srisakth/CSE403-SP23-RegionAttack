@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
         // Alert the first player
         string player = _game.isP1Turn ? "1" : "2";
 
-        _popup.StartDisplay(_game.isP1Turn, $"Player {player}'s Turn!");
+        //_popup.StartDisplay(_game.isP1Turn, $"Player {player}'s Turn!");
 
         _gameTimer.ResetTimer();
 

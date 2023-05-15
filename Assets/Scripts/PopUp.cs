@@ -6,14 +6,25 @@ using TMPro;
 public class PopUp : MonoBehaviour
 {
     public TMP_Text _text;
+    public GameObject _container;
     public bool _default = false;
     public float _duration = 1;
     private WaitForSeconds _wait = new WaitForSeconds(1);
 
+
+    private void Awake()
+    {
+        // If we don't have a container assigned, assume it is this one
+        if (_container == null)
+        {
+            _container = gameObject;
+        }
+    }
+
     public void StartDisplay(bool toP1, string message)
     {
         _text.text = message;
-        gameObject.SetActive(!_default);
+        _container.SetActive(!_default);
         StartCoroutine(Display());
     }
 
@@ -33,6 +44,6 @@ public class PopUp : MonoBehaviour
     IEnumerator Display()
     {
         yield return _wait;
-        gameObject.SetActive(_default);
+        _container.SetActive(_default);
     }
 }
