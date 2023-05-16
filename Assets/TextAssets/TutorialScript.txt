@@ -1,0 +1,33 @@
+Welcome to the Tutorial for RegionAttack!
+Region Attack is a simple strategic game based on mathematical concepts like multiples, divisors, and prime numbers. 
+Uncomfortable with math? Don`t be afraid. 
+In the next few minutes you will see that it`s quite understandable.
+You just saw the game board RegionAttack is played on. 
+In the middle there is the actual game board. 
+It is divided into two halves: Yours and that of your opponent. 
+Both players start with 4 numbers in the hand. 
+The game ends after 5 minutes.
+There is also a timer that indicates how much time is left for your move. 
+If you do not play a move within 15 seconds, you lose a move and your opponent can make their next move. 
+You might be wondering what a move looks like.
+There are two options on how to place your move. 
+First, if you are not placing a number next to one you already played, you can place any prime number anywhere on your side of the board. 
+Take the 3, which is a prime, and place it on the board.
+
+Good! Now, the opponent will make a move.
+Now it`s your turn again. 
+You can extend your region by placing a number that it is either a divisor or a multiple for each of its neighbors. 
+Grab your 12 and put it somewhere next to the 3.
+
+Great! As you can see, your score increased from 1 to 2 because the your largest connected region consists of 2 tiles.
+You now have learned about the two rules on how to place numbers.
+You can enable helper mode to highlight fields where you can place your number.
+The computer played another prime and started a new region. 
+Its score remains as 1 because its largest region still consists of 1 tile.
+You can place numbers into the half of your opponent only if it extends one of your Regions.
+You cannot place primes into your opponent`s half to start a new region there.
+You can also replace your own numbers by placing your number on a tile that already contains your number.
+The only condition is that the new number must comply with the usual placement rules. 
+For example, you could play your 9 over your 12 as 9 is still a multiple of 3.
+The goal of the game is to have a larger Region than your opponent when the game is over. 
+That`s it! You can now either continue this game or go back to home.

@@ -12,27 +12,21 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     // Internal game object
-    Game _game;
-
-    // Options
-    bool _isOpponentAI = false;
-    bool _isOnline = false;
-    bool _enableHelper = false;
-    int _dim = 6;
-
-
-    // Option possibilities
-    public static readonly int[] DimOptions = {4, 6, 8};
-
+    public Game _game;
 
     // Game objects
+    public GameSetting _gameOption;
+
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;
-    public PopUp _popup;
     public Timer _moveTimer, _gameTimer;
+    public PopUp _popup;
+
     public Score _score, _resultScore;
     public TMP_Text _resultText;
     public GameObject _result;
+
+    public Tutorial _tutorial;
 
     // Selected tiles
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
@@ -47,10 +41,25 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // Initialize the board tiles
-        _gridManager.Initialize(_dim);
+        _gridManager.Initialize(_gameOption._dim);
 
         // Start the game
         RestartGame();
+    }
+
+    // Given a game state, updates the view based on it.
+    public void SetGame(Game game)
+    {
+        _game = game;
+
+        // Update the view to reflect the new game state
+        // Sync the board information
+        _gridManager.UpdateGrid(_game.board);
+
+        // Set the score
+        _score.SetScore(game.p1.getScore(), game.p2.getScore());
+
+        EndMove();
     }
 
     // Method to restart the game. Assumes that (1) there was a game played previously, and
@@ -61,7 +70,12 @@ public class GameManager : MonoBehaviour
         _result.SetActive(false);
         
         // Make a new game
-        _game = new Game(_dim, _isOpponentAI);
+        _game = new Game(_gameOption._dim, _gameOption._isOpponentAI);
+
+        if (_gameOption._isOnline)
+        {
+            // TODO: Fetch the board and hand state
+        }
 
         // Sync the board information
         _gridManager.UpdateGrid(_game.board);
@@ -72,7 +86,8 @@ public class GameManager : MonoBehaviour
         // Alert the first player
         string player = _game.isP1Turn ? "1" : "2";
 
-        _popup.StartDisplay(true, $"Player {player}'s Turn!");
+        if (!_gameOption._isTutorial)
+            _popup.StartDisplay(_game.isP1Turn, $"Player {player}'s Turn!");
 
         _gameTimer.ResetTimer();
 
@@ -101,7 +116,7 @@ public class GameManager : MonoBehaviour
         _moveTimer.StopTimer();
 
         // Unhighlight the previous tiles
-        if (_enableHelper && _highlightedTiles != null)
+        if (_gameOption._enableHelper && _highlightedTiles != null)
             _gridManager.HighlightTiles(_highlightedTiles, false);
 
         // Make the references null just in case
@@ -112,23 +127,6 @@ public class GameManager : MonoBehaviour
         _result.SetActive(true);
         _resultScore.SetScore(_game.p1.getScore(), _game.p2.getScore());
         _resultText.text = _game.TerminateGame();
-    }
-
-    // **** Game Mode extraction ****
-
-    public void SetPlayerMode(bool isOpponentAI)
-    {
-        _isOpponentAI = isOpponentAI;
-    }
-
-    public void SetHelperMode(bool enableHelper)
-    {
-        _enableHelper = enableHelper;
-    }
-
-    public void SetDimension(int option)
-    {
-        _dim = DimOptions[option];
     }
 
     // **** Tile Selection ****
@@ -144,7 +142,7 @@ public class GameManager : MonoBehaviour
     public void SetNumber(Tile tile)
     {
         // Unhighlight the previous tiles
-        if (_numTile != null && _enableHelper)
+        if (_numTile != null && _gameOption._enableHelper)
             _gridManager.HighlightTiles(_highlightedTiles, false);
 
         _numTile = tile;
@@ -152,7 +150,7 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(MakeMove(_boardTile._position, _numTile._num));
         } 
-        else if (_enableHelper)
+        else if (_gameOption._enableHelper)
         {
             _highlightedTiles = _game.PossibleMoves(tile._num,_game.isP1Turn);
             _gridManager.HighlightTiles(_highlightedTiles, true);
@@ -161,10 +159,10 @@ public class GameManager : MonoBehaviour
 
     // With the appropriate tile and number tile selected, tries to make the move by passing it to the
     // Game object. If valid, then updates the board accordingly and adds the new number to the opponent's deck.
-    private IEnumerator MakeMove((int, int) position, int num)
+    public IEnumerator MakeMove((int, int) position, int num)
     {
         // If it's P2's turn and it's AI, then pause for a bit
-        if (!_game.isP1Turn && _isOpponentAI)
+        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isTutorial))
             yield return _wait;
 
         int res = _game.MakeMove(position, num);
@@ -229,25 +227,28 @@ public class GameManager : MonoBehaviour
 
         // Enable/disable the hands
         _p1Hand.SetEnable(_game.isP1Turn);
-        _p2Hand.SetEnable(!_game.isP1Turn && !_isOpponentAI);
+        _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._isOpponentAI && !_gameOption._isTutorial);
 
         // Unhighlight the previous tiles
-        if (_enableHelper && _highlightedTiles != null)
+        if (_gameOption._enableHelper && _highlightedTiles != null)
             _gridManager.HighlightTiles(_highlightedTiles, false);
 
-        _moveTimer.ResetTimer();
-        _moveTimer.transform.rotation = _game.isP1Turn || _isOpponentAI ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
+        // If it's the tutorial, we don't want to restart the timer
+        if (!_gameOption._isTutorial)
+            _moveTimer.ResetTimer();
+
+        _moveTimer.transform.rotation = _game.isP1Turn || _gameOption._isOpponentAI ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
 
         _boardTile = null;
         _numTile = null;
         _highlightedTiles = null;
 
         // If it's p2's turn and it's computer or online, then we need to fetch the move
-        if (!_game.isP1Turn && (_isOpponentAI || _isOnline))
+        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isOnline))
         {
             (int, int) position = (-1, -1);
             int num = 0;
-            if (_isOpponentAI)
+            if (_gameOption._isOpponentAI)
             {
                 ComputerPlayer cp = (ComputerPlayer)_game.p2;
                 ((int, int), int) move = cp.findMove();
@@ -268,11 +269,19 @@ public class GameManager : MonoBehaviour
                 Skip();
             }
         }
+
+        // If it's the tutorial mode, then notify whenever a move is made by the player
+        // It would be p2's turn if it was p1's turn
+        if (_gameOption._isTutorial && !_game.isP1Turn)
+        {
+            _tutorial.Continue();
+        }
+
     }
 
 
     // Helper function called to instantiate the game with respective calls to the hand manager.
-    void DisplayHand(HandManager hand, Player player)
+    public void DisplayHand(HandManager hand, Player player)
     {
         hand.ClearHand();
 
