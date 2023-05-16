@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameOption : MonoBehaviour
+public class GameSetting : MonoBehaviour
 {
     // Options
     public bool _isOpponentAI = false;

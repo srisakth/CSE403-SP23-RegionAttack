@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public Game _game;
 
     // Game objects
-    public GameOption _gameOption;
+    public GameSetting _gameOption;
 
     public GridManager _gridManager;
     public HandManager _p1Hand, _p2Hand;

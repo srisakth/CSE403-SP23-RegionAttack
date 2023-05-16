@@ -1902,7 +1902,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 615388053}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4e12e5cc60538945b395bd12174a195, type: 3}
+  m_Script: {fileID: 11500000, guid: 18bf09376e0822a48872582d1810ebc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _isOpponentAI: 0

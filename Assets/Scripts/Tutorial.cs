@@ -11,7 +11,7 @@ public class Tutorial : MonoBehaviour
 
     // Access to the game manager
     public GameManager _gameManager;
-    public GameOption _gameOption;
+    public GameSetting _gameOption;
 
     // Tutorial text
     public PopUp _popUp;
