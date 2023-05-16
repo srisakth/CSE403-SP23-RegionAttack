@@ -10,6 +10,7 @@ public class GameOption : MonoBehaviour
     public bool _isOpponentAI = false;
     public bool _isOnline = false;
     public bool _enableHelper = false;
+    public bool _isTutorial = false;
     public int _dim = 6;
 
     // UI components
@@ -44,5 +45,10 @@ public class GameOption : MonoBehaviour
     {
         _dim = DimOptions[option];
         _dimDropdown.value = option;
+    }
+
+    public void SetTutorial(bool isTutorial)
+    {
+        _isTutorial = isTutorial;
     }
 }

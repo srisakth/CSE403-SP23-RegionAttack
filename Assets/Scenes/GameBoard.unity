@@ -314,7 +314,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1847,13 +1847,14 @@ MonoBehaviour:
   _gridManager: {fileID: 169032071}
   _p1Hand: {fileID: 106990267}
   _p2Hand: {fileID: 495822007}
-  _popup: {fileID: 424902458}
   _moveTimer: {fileID: 1594614410}
   _gameTimer: {fileID: 966437781}
+  _popup: {fileID: 424902458}
   _score: {fileID: 966437780}
   _resultScore: {fileID: 391303737}
   _resultText: {fileID: 2051949868}
   _result: {fileID: 1792370312}
+  _tutorial: {fileID: 615388058}
 --- !u!224 &615388057
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1907,6 +1908,7 @@ MonoBehaviour:
   _isOpponentAI: 0
   _isOnline: 0
   _enableHelper: 0
+  _isTutorial: 0
   _dim: 6
   _AIToggle: {fileID: 30438841}
   _onlineToggle: {fileID: 1940776886}
@@ -5709,6 +5711,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 615388059}
+        m_TargetAssemblyTypeName: GameOption, Scripts
+        m_MethodName: SetTutorial
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1502749290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6772,7 +6786,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -8930,6 +8944,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 615388059}
+        m_TargetAssemblyTypeName: GameOption, Scripts
+        m_MethodName: SetTutorial
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 615388058}
         m_TargetAssemblyTypeName: Tutorial, Scripts
         m_MethodName: StartTutorial
@@ -9926,7 +9952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.29803923}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.69803923}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

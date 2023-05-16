@@ -30,7 +30,7 @@ public class Tutorial : MonoBehaviour
             _messages = _script.text.Split('\n');
         }
 
-        _popUp.SetDuration(3);
+        _popUp.SetDuration(2);
         _popUp._default = true;
     }
 
@@ -68,6 +68,7 @@ public class Tutorial : MonoBehaviour
         if (_index == _messages.Length)
         {
             _gameOption.SetPlayerMode(true);
+            _gameOption.SetTutorial(false);
             _popUp._container.SetActive(false);
 
             // Instantiate a Computer player
@@ -82,24 +83,84 @@ public class Tutorial : MonoBehaviour
 
         _popUp.SetMessage(_messages[_index]);
 
-        // Condition to activate the home button
+        // Special events for some indices
+        // The number corresponds to the line number of the text displayed before the specified action occurs
+
+        if (_index == 4)
+        {
+            _popUp.StartDisplay(_messages[_index]);
+        }
+
+        // Hide the display until a move happens
+        if (_index == 15)
+        {
+            _popUp._container.SetActive(false);
+
+            foreach (Tile tile in _gameManager._p1Hand._hand)
+            {
+                if (tile._num != 3)
+                {
+                    tile._button.enabled = false;
+                }
+            }
+        }
+        if (_index == 16)
+        {
+            _gameManager._game.p1.numberPool = new List<int>{ 4,11,9,12 };
+            _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
+            _popUp._container.SetActive(true);
+        }
+        if (_index == 17)
+        {
+            StartCoroutine(_gameManager.MakeMove((1, 1), 7));
+            _popUp.StartDisplay(_messages[_index]);
+        }
+
+        if (_index == 18)
+        {
+            _gameManager._game.p2.numberPool = new List<int> { 1, 9, 5, 8 };
+            _gameManager.DisplayHand(_gameManager._p2Hand, _gameManager._game.p2);
+            _gameManager._p2Hand.SetEnable(false);
+        }
+
+        // Hide the display until a move happens
+        if (_index == 20)
+        {
+            _popUp._container.SetActive(false);
+            foreach(Tile tile in _gameManager._p1Hand._hand)
+            {
+                if (tile._num != 12)
+                {
+                    tile._button.enabled = false;
+                }
+            }
+        }
+        if (_index == 21)
+        {
+            _gameManager._game.p1.numberPool = new List<int> { 4, 11, 9, 8 };
+            _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
+            _popUp._container.SetActive(true);
+        }
+
+        if (_index == 24)
+        {
+            StartCoroutine(_gameManager.MakeMove((3, 1), 5));
+            _popUp.StartDisplay(_messages[_index]);
+        }
+        if (_index == 25)
+        {
+            _gameManager._game.p2.numberPool = new List<int> { 1, 9, 3, 8 };
+            _gameManager.DisplayHand(_gameManager._p2Hand, _gameManager._game.p2);
+            _gameManager._p2Hand.SetEnable(false);
+
+        }
+
         if (_index == _messages.Length - 1)
         {
             // display the Home button
             _homeButton.gameObject.SetActive(true);
         }
 
-        // Display the board for a moment
-        if (_index == 4 || _index == 16 || _index == 22)
-        {
-            _popUp.StartDisplay(_messages[_index]);
-        }
-
-        // Make a move for the opponent
-        if (_index == 16 || _index == 22)
-        {
-
-        }
         _index++;
     }
 }
