@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,13 +17,26 @@ public class Tile : MonoBehaviour
     public Image _highlight;
     public Button _button;
 
+    // Color
     public float _hue = 0;
-
     public ColorBlock _p1ColorBlock, _p2ColorBlock;
+
+    // highlight
+    float PERIOD = 0.8f;
+    Coroutine _coroutine;
 
     public void Highlight(bool enable)
     {
         _highlight.gameObject.SetActive(enable);
+
+        if (enable)
+        {
+            _coroutine = StartCoroutine(HighlightAnimation());
+        } 
+        else if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
     }
 
 
@@ -47,6 +62,25 @@ public class Tile : MonoBehaviour
             _text.text = "";
 
         _button.colors = _isP1 ? _p1ColorBlock : _p2ColorBlock;
+    }
+
+    IEnumerator HighlightAnimation()
+    {
+        while (true)
+        {
+            _highlight.color = new Color(1, 1, 1, 0);
+            for (float t = 0; t < PERIOD/2; t += Time.deltaTime)
+            {
+                _highlight.color = new Color(1, 1, 1, t/PERIOD);
+                yield return null;
+            }
+            _highlight.color = new Color(1, 1, 1, 0.5f);
+            for (float t = 0; t < PERIOD; t += Time.deltaTime)
+            {
+                _highlight.color = new Color(1, 1, 1, 0.5f - t/PERIOD);
+                yield return null;
+            }
+        }
     }
 
     static ColorBlock GenerateColorBlock(float hue)
