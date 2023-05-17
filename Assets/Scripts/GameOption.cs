@@ -11,7 +11,7 @@ public class GameOption
         computerAdvanced
     }
     int dim;
-    Mode mode;
+    public Mode mode;
     bool startingPlayer;
     public GameOption(int dim, bool startingPlayer, Mode mode)
 	{
@@ -19,19 +19,21 @@ public class GameOption
         this.mode = mode;
         this.startingPlayer = startingPlayer;
 	}
-    public Game initGame(){
-        Game game = new Game(dim, isComputerGame());
+    public Game InitGame(){
+        Game game = new Game(this);
         game.isP1Turn = startingPlayer;
         return game;
     }
-    public bool isOnlineGame(){
+    public bool IsOnlineGame(){
         return mode == Mode.online;
     }
-    public bool isLocalGame(){
+    public bool IsLocalGame(){
         return mode == Mode.local;
     }
-    public bool isComputerGame(){
+    public bool IsComputerGame(){
         return mode == Mode.computerBasic || mode == Mode.computerAdvanced;
     }
-	
+    public int GetDimension() {
+        return dim;
+    }
 }
