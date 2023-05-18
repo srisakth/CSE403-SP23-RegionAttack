@@ -8,7 +8,7 @@ public class Game
 	int initPoolSize = 4;
 	int maxNumber = 12;
 	int _dim;
-
+	GameOption gameOption = null;
 	// Variables (Game Board, Players)
 	public Player p1;
 	public Player p2;
@@ -19,31 +19,53 @@ public class Game
 	public (int, bool)[,] board;
 
 	private Random random = new Random();
+    public Game(int dim, bool computerOpponent)
+    {
+        p1 = new Player(1, this);
+        if (!computerOpponent){
+            p2 = new Player(2, this);
 
-	public Game(int dim, bool _isOpponentAI)
+        }else{
+            p2 = new ComputerPlayer(2, this);
+        }
+        _dim = dim;
+        board = new (int, bool)[dim, dim];
+        for (int i = 0; i < dim; i++)
+        {
+            for (int j = 0; j < dim; j++)
+            {
+                board[i, j] = (0, IsP1Side((i, j)));
+            }
+        }
+        // Add the initial hand
+        genNumberPool(p1);
+        genNumberPool(p2);
+        
+        // Decide which player is playing first
+        isP1Turn = random.Next(0, 2) == 0;
+    }
+    public Game(GameOption gameOption)
 	{
+		this.gameOption = gameOption;
 		p1 = new Player(1,this);
-		if (_isOpponentAI)
-		{
-			p2 = new ComputerPlayer(2,this);
+		if (gameOption.mode == GameOption.Mode.local || gameOption.mode == GameOption.Mode.online){
+			p2 = new Player(2, this);
+		}else if (gameOption.mode == GameOption.Mode.computerBasic){
+			p2 = new ComputerPlayer(2, this);
+		}else if (gameOption.mode == GameOption.Mode.computerAdvanced) {
+			p2 = new ComputerPlayerAdvanced(2, this);
 		}
-		else {
-			p2 = new Player(2,this);
-		}
-
-		isP1Turn = true;
-
-		_dim = dim;
-		board = new (int, bool)[dim, dim];
-		for (int i = 0; i < dim; i++) {
-			for (int j = 0; j < dim; j++) {
+		_dim = gameOption.GetDimension();
+		board = new (int, bool)[_dim, _dim];
+		for (int i = 0; i < _dim; i++) {
+			for (int j = 0; j < _dim; j++) {
 				board[i, j] = (0, IsP1Side((i, j)));
 			}
 		}
-		genNumberPool(p1);
+        // Add the initial hand
+        genNumberPool(p1);
 		genNumberPool(p2);
-		// Add the initial hand
-
+		
 		// Decide which player is playing first
 		isP1Turn = random.Next(0, 2) == 0;
 	}
@@ -101,7 +123,7 @@ public class Game
 
 	public bool isPrime(int number)
 	{
-		int[] sprimes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
+		int[] sprimes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
 		return Array.Exists(sprimes, element => element == number);
 	}
 
