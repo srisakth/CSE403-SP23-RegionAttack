@@ -21,16 +21,32 @@ public class GameScreenAdjuster : MonoBehaviour
 
     void ChangePosition()
     {
-        //print("YUP");
-        float gridSize;
         if (Screen.width > Screen.height)
         {
             // Landscape
-            gridSize = Screen.height * _gridRatio;
-
-            // Set P1's position to the left
+            // Set P1's position to the right
             RectTransform rect = _gameManager._p1Hand.transform.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0, 0.5f);
+            rect.pivot = new Vector2(1, 0.5f);  // pivot on right
+            rect.anchorMax = new Vector2(1, 0.5f); // Anker to the right of screen
+            rect.anchorMin = new Vector2(1, 0.5f);
+            rect.rotation = Quaternion.identity;
+
+            // Set P2's position to the left
+            rect = _gameManager._p2Hand.transform.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0, 0.5f); // pivot on left
+            rect.anchorMax = new Vector2(0, 0.5f); // anker on left
+            rect.anchorMin = new Vector2(0, 0.5f);
+            rect.rotation = Quaternion.identity;
+
+            // Set the size and position of the timers
+            _moveTimer.pivot = Vector2.one * 0.5f;  // Pivot on center
+            _moveTimer.anchorMax = new Vector2(0.5f, 0); // anker on bottom
+            _moveTimer.anchorMin = new Vector2(0.5f, 0);
+
+            _gameTimer.pivot = Vector2.one * 0.5f;  // Pivot on center
+            _gameTimer.anchorMax = new Vector2(0.5f, 1); // anker on top
+            _gameTimer.anchorMin = new Vector2(0.5f, 1);
+            _gameTimer.rotation = Quaternion.identity;  // rotate it upright
         }
         else
         {
@@ -62,32 +78,42 @@ public class GameScreenAdjuster : MonoBehaviour
 
     void Adjust()
     {
-        float gridSize, height;
+        float gridSize, handShort;
         if (Screen.width > Screen.height)
         {
             // Landscape
             gridSize = Screen.height * _gridRatio;
+            handShort = (Screen.width - gridSize) / 6;
 
-            // Set P1's position to the left
             RectTransform rect = _gameManager._p1Hand.transform.GetComponent<RectTransform>();
-            rect.pivot = new Vector2(0, 0.5f);
+            rect.sizeDelta = new Vector2(handShort, gridSize);
+            rect.anchoredPosition = new Vector3(-handShort, 0, 0);
+
+            rect = _gameManager._p2Hand.transform.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(handShort, gridSize);
+            rect.anchoredPosition = new Vector3(handShort, 0, 0);
+
+            _gameTimer.sizeDelta = new Vector2(gridSize / 2, Screen.height * _timerRatio);
+            _gameTimer.anchoredPosition = new Vector3(0, -Screen.height * (1 - _gridRatio) / 4, 0);
+            _moveTimer.sizeDelta = Vector2.one * Screen.height * _timerRatio;
+            _moveTimer.anchoredPosition = new Vector3(0, Screen.height * (1 - _gridRatio) / 4, 0);
         }
         else
         {
             // Vertical
             //print($"{Screen.width} x {Screen.height}");
             gridSize = Screen.width * _gridRatio;
-            height = (Screen.height - gridSize) / 6;
+            handShort = (Screen.height - gridSize) / 6;
 
             //print($"Height: {height}");
             // Adjust the size
             RectTransform rect = _gameManager._p1Hand.transform.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(gridSize, height);
-            rect.anchoredPosition = new Vector3(0, height, 0);
+            rect.sizeDelta = new Vector2(gridSize, handShort);
+            rect.anchoredPosition = new Vector3(0, handShort, 0);
 
             rect = _gameManager._p2Hand.transform.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(gridSize, height);
-            rect.anchoredPosition = new Vector3(0, -height, 0);
+            rect.sizeDelta = new Vector2(gridSize, handShort);
+            rect.anchoredPosition = new Vector3(0, -handShort, 0);
 
 
             _gameTimer.sizeDelta = new Vector2(gridSize / 2, Screen.width * _timerRatio);
@@ -97,14 +123,8 @@ public class GameScreenAdjuster : MonoBehaviour
         }
 
         float cellSize = _gameManager._gridManager.SetGridSize(gridSize);
-        float spaceSize = cellSize * GridManager._spaceRatio;
 
-        GridLayoutGroup grid = _gameManager._p1Hand._parent.GetComponent<GridLayoutGroup>();
-        grid.cellSize = Vector2.one * cellSize;
-        grid.spacing = Vector2.one * spaceSize;
-
-        grid = _gameManager._p2Hand._parent.GetComponent<GridLayoutGroup>();
-        grid.cellSize = Vector2.one * cellSize;
-        grid.spacing = Vector2.one * spaceSize;
+        _gameManager._p1Hand.SetSize(cellSize * 0.4f, cellSize);
+        _gameManager._p2Hand.SetSize(cellSize * 0.4f, cellSize);
     }
 }

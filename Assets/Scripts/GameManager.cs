@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
 
     public Tutorial _tutorial;
 
+    public Tile _tilePrefab;
+
     // Selected tiles
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
     // to check for selection.
@@ -36,12 +38,31 @@ public class GameManager : MonoBehaviour
 
     private WaitForSeconds _wait = new WaitForSeconds(1.5f);
 
+    private void Awake()
+    {
+        if (_p1Hand != null)
+            _p1Hand.Initialize(_tilePrefab, true, this);
+        else
+            print("P1 Hand Manager not selected");
+
+        if (_p2Hand != null)
+            _p2Hand.Initialize(_tilePrefab, false, this);
+        else
+            print("P2 Hand Manager not selected");
+
+        if (_gridManager != null)
+            _gridManager.Initialize(_tilePrefab, this);
+        else
+            print("Grid Manager not selected");
+
+    }
+
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
     public void StartGame()
     {
         // Initialize the board tiles
-        _gridManager.Initialize(_gameOption._dim);
+        _gridManager.InitializeGrid(_gameOption._dim);
 
         // Start the game
         RestartGame();
@@ -68,6 +89,8 @@ public class GameManager : MonoBehaviour
     {
         // Turn off the results page
         _result.SetActive(false);
+
+        // If the new game has a different grid size, adjust the hand size
         
         // Make a new game
         _game = new Game(_gameOption._dim, _gameOption._isOpponentAI);
@@ -237,7 +260,9 @@ public class GameManager : MonoBehaviour
         if (!_gameOption._isTutorial)
             _moveTimer.ResetTimer();
 
-        _moveTimer.transform.rotation = _game.isP1Turn || _gameOption._isOpponentAI ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
+        bool isUpright = _game.isP1Turn || _gameOption._isOpponentAI || (Screen.width > Screen.height);
+
+        _moveTimer.transform.rotation = isUpright ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
 
         _boardTile = null;
         _numTile = null;

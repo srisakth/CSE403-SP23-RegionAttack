@@ -14,10 +14,10 @@ public class GridManager : MonoBehaviour
     public int _dimension = 6;
 
     // The GameManager to send coordinate info to
-    public GameManager _gameManager;
+    GameManager _gameManager;
 
     // Prefabs for the tiles
-    public Tile _tilePrefab;
+    Tile _tilePrefab;
 
     // Cell : spacing ratio
     public static float _spaceRatio = 0.1f;
@@ -25,8 +25,14 @@ public class GridManager : MonoBehaviour
     // Reference to the tile GameObjects
     Tile[,] _tiles;
 
+    public void Initialize(Tile tilePrefab, GameManager gameManager)
+    {
+        _tilePrefab = tilePrefab;
+        _gameManager = gameManager;
+    }
+
     // Given the dimension of the board, initializes
-    public void Initialize(int dimension)
+    public void InitializeGrid(int dimension)
     {
         _dimension = dimension;
 
@@ -122,6 +128,8 @@ public class GridManager : MonoBehaviour
 
         // Since we want _size tiles for each column/row, set the constraint count
         grid.constraintCount = _dimension;
+
+        _tilePrefab._text.fontSize = cellSize * 0.4f;
     }
 
 
