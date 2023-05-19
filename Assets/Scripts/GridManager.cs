@@ -31,7 +31,7 @@ public class GridManager : MonoBehaviour
         _gameManager = gameManager;
     }
 
-    // Given the dimension of the board, initializes
+    // Given the dimension of the board, initializes the board
     public void InitializeGrid(int dimension)
     {
         _dimension = dimension;

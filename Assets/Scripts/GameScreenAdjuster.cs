@@ -121,10 +121,16 @@ public class GameScreenAdjuster : MonoBehaviour
             _moveTimer.sizeDelta = Vector2.one * Screen.width * _timerRatio;
             _moveTimer.anchoredPosition = new Vector3(Screen.width * (1 - _gridRatio)/4, 0, 0);
         }
-
+        // Adjust the cell sizes
         float cellSize = _gameManager._gridManager.SetGridSize(gridSize);
 
         _gameManager._p1Hand.SetSize(cellSize * 0.4f, cellSize);
         _gameManager._p2Hand.SetSize(cellSize * 0.4f, cellSize);
+
+        // Text box sizes
+        RectTransform message = _gameManager._tutorial._popUp._container.transform.GetComponent<RectTransform>();
+        message.sizeDelta = new Vector2(gridSize, gridSize * 2 / 3);
+        message = _gameManager._popup._container.transform.GetComponent<RectTransform>();
+        message.sizeDelta = new Vector2(gridSize, gridSize * 2 / 3);
     }
 }

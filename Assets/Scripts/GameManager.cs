@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 
 /*
@@ -64,6 +65,10 @@ public class GameManager : MonoBehaviour
         // Initialize the board tiles
         _gridManager.InitializeGrid(_gameOption._dim);
 
+        Vector2 cellSize = _gridManager.GetComponent<GridLayoutGroup>().cellSize;
+        _p1Hand.SetSize(cellSize.x * 0.4f, cellSize.x);
+        _p2Hand.SetSize(cellSize.x * 0.4f, cellSize.x);
+
         // Start the game
         RestartGame();
     }
@@ -89,9 +94,7 @@ public class GameManager : MonoBehaviour
     {
         // Turn off the results page
         _result.SetActive(false);
-
-        // If the new game has a different grid size, adjust the hand size
-        
+                
         // Make a new game
         _game = new Game(_gameOption._dim, _gameOption._isOpponentAI);
 
