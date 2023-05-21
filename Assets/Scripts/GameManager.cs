@@ -58,12 +58,42 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void StartOnlineGame()
+    {
+        _gameOption._option.mode = GameOption.Mode.online;
+        StartGame();
+    }
+
+    public void StartLocalGame()
+    {
+        _gameOption._option.mode = GameOption.Mode.local;
+        StartGame();
+    }
+
+    public void StartAIGame()
+    {
+        switch(_gameOption._difficulty)
+        {
+            case 0:
+                _gameOption._option.mode = GameOption.Mode.computerBasic;
+                break;
+            case 1:
+                _gameOption._option.mode = GameOption.Mode.computerAdvanced;
+                break;
+            default:
+                _gameOption._option.mode = GameOption.Mode.computerBasic;
+                break;
+        }
+
+        StartGame();
+    }
+
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
-    public void StartGame()
+    void StartGame()
     {
         // Initialize the board tiles
-        _gridManager.InitializeGrid(_gameOption._dim);
+        _gridManager.InitializeGrid(_gameOption._option.dim);
 
         Vector2 cellSize = _gridManager.GetComponent<GridLayoutGroup>().cellSize;
         _p1Hand.SetSize(cellSize.x * 0.4f, cellSize.x);
@@ -96,9 +126,9 @@ public class GameManager : MonoBehaviour
         _result.SetActive(false);
                 
         // Make a new game
-        _game = new Game(_gameOption._dim, _gameOption._isOpponentAI);
+        _game = _gameOption._option.InitGame();
 
-        if (_gameOption._isOnline)
+        if (_gameOption._option.IsOnlineGame())
         {
             // TODO: Fetch the board and hand state
         }
@@ -188,7 +218,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator MakeMove((int, int) position, int num)
     {
         // If it's P2's turn and it's AI, then pause for a bit
-        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isTutorial))
+        if (!_game.isP1Turn && (_gameOption._option.IsComputerGame() || _gameOption._isTutorial))
             yield return _wait;
 
         int res = _game.MakeMove(position, num);
@@ -253,7 +283,7 @@ public class GameManager : MonoBehaviour
 
         // Enable/disable the hands
         _p1Hand.SetEnable(_game.isP1Turn);
-        _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._isOpponentAI && !_gameOption._isTutorial);
+        _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._option.IsComputerGame() && !_gameOption._isTutorial);
 
         // Unhighlight the previous tiles
         if (_gameOption._enableHelper && _highlightedTiles != null)
@@ -263,7 +293,7 @@ public class GameManager : MonoBehaviour
         if (!_gameOption._isTutorial)
             _moveTimer.ResetTimer();
 
-        bool isUpright = _game.isP1Turn || _gameOption._isOpponentAI || (Screen.width > Screen.height);
+        bool isUpright = _game.isP1Turn || _gameOption._option.IsComputerGame() || (Screen.width > Screen.height);
 
         _moveTimer.transform.rotation = isUpright ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
 
@@ -272,11 +302,11 @@ public class GameManager : MonoBehaviour
         _highlightedTiles = null;
 
         // If it's p2's turn and it's computer or online, then we need to fetch the move
-        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isOnline))
+        if (!_game.isP1Turn && (_gameOption._option.IsComputerGame() || _gameOption._option.IsOnlineGame()))
         {
             (int, int) position = (-1, -1);
             int num = 0;
-            if (_gameOption._isOpponentAI)
+            if (_gameOption._option.IsComputerGame())
             {
                 ComputerPlayer cp = (ComputerPlayer)_game.p2;
                 ((int, int), int) move = cp.findMove();

@@ -53,7 +53,7 @@ public class GridManager : MonoBehaviour
         // Remove the tiles
         foreach (Tile tile in _tiles)
         {
-            GameObject.Destroy(tile.gameObject);
+            Destroy(tile.gameObject);
         }
     }
 

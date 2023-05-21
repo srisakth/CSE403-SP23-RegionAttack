@@ -55,7 +55,7 @@ public class Game
 		}else if (gameOption.mode == GameOption.Mode.computerAdvanced) {
 			p2 = new ComputerPlayerAdvanced(2, this);
 		}
-		_dim = gameOption.GetDimension();
+		_dim = gameOption.dim;
 		board = new (int, bool)[_dim, _dim];
 		for (int i = 0; i < _dim; i++) {
 			for (int j = 0; j < _dim; j++) {
