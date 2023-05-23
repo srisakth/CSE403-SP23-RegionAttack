@@ -9,12 +9,13 @@ public class ComputerPlayerAdvanced : ComputerPlayer
     {
 
     }
-    public ((int, int), int) findPrimeMove(int prime)
+    // The FindPrimeMove method tries to find a position to place the given prime on the board by generating random positions in it's half of the board.
+    public ((int, int), int) FindPrimeMove(int prime)
     {
-        for (int i = 0; i < game.getDim() * game.getDim(); i++)
+        for (int i = 0; i < game.GetDim() * game.GetDim(); i++)
         {
-            int x = random.Next(0, game.getDim() / 2);
-            int y = random.Next(0, game.getDim());
+            int x = random.Next(0, game.GetDim() / 2);
+            int y = random.Next(0, game.GetDim());
 
             if (game.IsValid((x, y), prime, id == 1) > 0)
             {
@@ -23,7 +24,8 @@ public class ComputerPlayerAdvanced : ComputerPlayer
         }
         return ((-1, -1), 0);
     }
-    public List<int> haveMulDiv(int num)
+    // The HasMulDiv method returns for a given number if the Computer Player has a number in his number pool, which is either a multiple or a divisor of the given number.
+    public List<int> HasMulDiv(int num)
     {
         List<int> posNums = new List<int> { };
         for (int i = 0; i < numberPool.Count; i++)
@@ -35,23 +37,24 @@ public class ComputerPlayerAdvanced : ComputerPlayer
         }
         return posNums;
     }
-    public new ((int, int), int) findMove()
+    // The FindMove method overrides it's parents classes FindMethod to implement a more complex logic. 
+    public new ((int, int), int) FindMove()
     {
         //Try to extend current region
-        for (int i = 0; i < game.getDim(); i++)
+        for (int i = 0; i < game.GetDim(); i++)
         {
-            for (int j = 0; j < game.getDim(); j++)
+            for (int j = 0; j < game.GetDim(); j++)
             {
-                if (game.isPlayersNumber((i, j), false))
+                if (game.IsPlayersNumber((i, j), false))
                 {
-                    List<int> nums = haveMulDiv(game.board[i, j].Item1);
+                    List<int> nums = HasMulDiv(game.board[i, j].Item1);
                     for (int l = 0; l < nums.Count; l++)
                     {
                         int num = nums[l];
-                        if (!game.isPlayersNumber((i + 1, j), false) && game.IsValid((i + 1, j), num, id == 1) > 0) return ((i + 1, j), num);
-                        if (!game.isPlayersNumber((i - 1, j), false) && game.IsValid((i - 1, j), num, id == 1) > 0) return ((i - 1, j), num);
-                        if (!game.isPlayersNumber((i, j + 1), false) && game.IsValid((i, j + 1), num, id == 1) > 0) return ((i, j + 1), num);
-                        if (!game.isPlayersNumber((i, j - 1), false) && game.IsValid((i + 1, j - 1), num, id == 1) > 0) return ((i, j - 1), num);
+                        if (!game.IsPlayersNumber((i + 1, j), false) && game.IsValid((i + 1, j), num, id == 1) > 0) return ((i + 1, j), num);
+                        if (!game.IsPlayersNumber((i - 1, j), false) && game.IsValid((i - 1, j), num, id == 1) > 0) return ((i - 1, j), num);
+                        if (!game.IsPlayersNumber((i, j + 1), false) && game.IsValid((i, j + 1), num, id == 1) > 0) return ((i, j + 1), num);
+                        if (!game.IsPlayersNumber((i, j - 1), false) && game.IsValid((i + 1, j - 1), num, id == 1) > 0) return ((i, j - 1), num);
                     }
                 }
             }
@@ -59,9 +62,9 @@ public class ComputerPlayerAdvanced : ComputerPlayer
         //Find move prime move
         for (int i = 0; i < numberPool.Count; i++)
         {
-            if (game.isPrime(numberPool[i]))
+            if (game.IsPrime(numberPool[i]))
             {
-                ((int, int), int) move = findPrimeMove(numberPool[i]);
+                ((int, int), int) move = FindPrimeMove(numberPool[i]);
                 if (move.Item2 != 0)
                 {
                     return move;
@@ -69,11 +72,11 @@ public class ComputerPlayerAdvanced : ComputerPlayer
             }
         }
         //Try to override number
-        for (int i = 0; i < game.getDim(); i++)
+        for (int i = 0; i < game.GetDim(); i++)
         {
-            for (int j = 0; j < game.getDim(); j++)
+            for (int j = 0; j < game.GetDim(); j++)
             {
-                if (game.isPlayersNumber((i, j), id == 1))
+                if (game.IsPlayersNumber((i, j), id == 1))
                 {
                     for (int n = 0; n < numberPool.Count; n++)
                     {
