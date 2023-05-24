@@ -1,4 +1,4 @@
-# Weekly Status Report - Region Attack: Week 4
+# Weekly Status Report - Region Attack: Week 5
 
 ## Team Report
 
@@ -14,7 +14,7 @@
 * Overall goal: Implement the 1 vs. 1 local game mode base functionality in FE and BE (does not need to fully work yet)
 * [Leander] Set up basic backend functionalities and provide an interface for front-end
 * [Kaede] Implement game board including basic functionality like placement of numbers
-* [Sri] Research task on how to implement multiplayer online version(specifically using i database) & documentation in the DnA section
+* [Sri] Research task on how to implement multiplayer online version(specifically using a database) & documentation in the DnA section
 * [Yanick] Assign tasks for DnA deliverable and ensure submission
 * [Yanick] Implement home screen
 
