@@ -1,4 +1,4 @@
-# Weekly Status Report - Region Attack: Week 4
+# Weekly Status Report - Region Attack: Week 6
 
 ## Team Report
 
@@ -39,6 +39,7 @@
 * [Yanick] FE/BE - Set up CI pipeline Build
 * [Sri] BE - Setup database
 * [Sri] BE - Setup testing for database
+* [Sri] BE - Decided to move from using attu/static ip computer to AWS b/c this project should last and be functional even after the quarter has ended.
 * [Sri] Testing & CI - Documentation of testing
 * [Leander] BE - Implement computer Player
 * [Leander] BE - Helper mode implemented
@@ -71,3 +72,4 @@
 * [Sri]: BE - Set up server
 * [Sri]: BE - Get data base & server fully running
 * [Sri]: BE - Add test cases for server and database
+* [Sri]: BE - Look into AWS Lightsail, get account set up and try to make connection.
