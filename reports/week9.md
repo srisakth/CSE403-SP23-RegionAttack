@@ -16,9 +16,7 @@
 * [Yanick]: PM - Redefine release strategy
 * [Yanick]: PM - Implement releases for beta release
 * [Leander]: BE -  Finish implementation more complex computer player
-* [Sri]: BE - Set up server
-* [Sri]: BE - Get data base & server fully running
-* [Sri]: BE - Add test cases for server and database
+* [Sri]: BE - Use some tutorials to try to get AWS(Lightsail or otherwise) to connect to AWS database from Unity
 
 ### Progress & Issues
 
@@ -32,7 +30,7 @@
 * [Yanick] PM - Define todos for last week
 * [Yanick] PM - Create UI/UX
 * [Yanick] Bug - Expected revision: Releases on Github and update in developer documentation
-* [Sri] BE - Attempt to set up a database, looked into/contacted CSE server staff about setting up attu or a machine in CSE with a static IP. Also looked into Unity based options. Unity options seemed to be more like a local database for each player storing their own move info rather than a ‘global’ database that could be accessed by any player/device.
+* [Sri] BE - Got very sick, could not make much progress on the server.
 * [Leander] BE - More complex computer player finalized
 * [Leander] BE - Refactoring to include multiple computer players
 
@@ -50,6 +48,4 @@
 * [Yanick]: PM - Assign final video task and cut things together
 * [Yanick]: PM - Depending on result of meeting implement releases
 * [Leander]: BE -  Finish implementation more complex computer player
-* [Sri]: BE - Set up server
-* [Sri]: BE - Get data base & server fully running
-* [Sri]: BE - Add test cases for server and database
+* [Sri]: BE - Removing the Server from this project since there is no time left to build, test and integrate it into the code base.
