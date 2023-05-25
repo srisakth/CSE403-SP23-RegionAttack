@@ -27,7 +27,7 @@
 * Overall progress: Tutorial mode integrated & Advanced Computer Player & User/Developer documentation
 * [Kaede] FE - Polish UI/UX
 * [Kaede] FE - Integrate more complex computer player
-* [Kaede] Vig - Expected revision: Releases on Github and update user documentation
+* [Kaede] Bug - Expected revision: Releases on Github and update user documentation
 * [Yanick] PM - Redefine release strategy (result needs to be discussed)
 * [Yanick] PM - Define todos for last week
 * [Yanick] PM - Create UI/UX
