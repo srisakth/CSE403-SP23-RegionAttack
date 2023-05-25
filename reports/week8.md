@@ -19,9 +19,10 @@
 * [Leander]: BE -  Finish implementation more complex computer player
 * [Leander]: BE - Clean up functionality code base
 * [Leander]: BE - Add Test cases
-* [Sri]: BE - Set up server
+* [Sri]: BE - Set up server, make it functional
 * [Sri]: BE - Get data base & server fully running
 * [Sri]: BE - Add test cases for server and database
+
 
 ### Progress & Issues
 
@@ -42,7 +43,9 @@
 * Overall issues: Release on target platforms not yet defined/done and thus not included in beta release
 * [Kaede] No major issues that need group resolution.
 * [Yanick] Misunderstanding with requirements for beta release: Didn’t expect build releases & deployment should be integrated by now
-* [Sri] Unable to make connection to AWS database through Unity
+* [Sri] Unable to make connection to AWS database through Unity. Able to make connection through other methods such as MySQL visual debugger
+* [Sri] Through some online reading, seems like placing locks on tables in AWS is unreliable for some reason. There are other possible ways to 'lock' the database, looking into it.
+* [Sri] Possible security issue in Unity is causing the connection to fail, rather than AWS connection being poor.
 * [Leander] I had no bigger issues this week.
 
 
@@ -57,3 +60,4 @@
 * [Sri]: BE - Set up server
 * [Sri]: BE - Get data base & server fully running
 * [Sri]: BE - Add test cases for server and database
+* [Sri]: BE - Look at some online tutorials to see if there is some other perspective that can help resolve the current issues. Not sure if even trying to use a different database system is worthwhile at this point since the issue is not being causes by the actual database, but rather by Unity.
