@@ -8,7 +8,8 @@ public class ComputerPlayer : Player
 	{
 		
 	}
-	public ((int, int), int) findMove() {
+	// The FindMove method computes a specific move that the Computer Player wants to play as the next move.
+	public ((int, int), int) FindMove() {
 		List<((int, int), int)> posMoves = PossibleMoves();
 		int randMove = random.Next(0, posMoves.Count);
 		return posMoves[randMove];
