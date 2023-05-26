@@ -1,4 +1,4 @@
-# Weekly Status Report - Region Attack: Week 4
+# Weekly Status Report - Region Attack: Week 7
 
 ## Team Report
 
@@ -58,7 +58,7 @@ Overall progress: Successful alpha release => Main functionality, 1 vs. 1 mode a
 Overall issues: Server still hasn’t made usable progress & moved some minor parts from alpha release to later releases (decided early & not a big issue)
 * [Kaede] Most of the frontend implementations are finished but may need some help in getting the frontend tests implemented due to their complexity and setup.
 * [Yanick] No major issues.
-* [Sri] Finish learning and setting up Unity to make sure SQL/server functionality is possible
+* [Sri] Tried to establish connection to AWS server. Struggled to just get code to work and run. Multiple package issues existed, especially working in Visual Studio. Had to work with Nuget Manager to try to get a working model before putting into the code base. Running code from Unity 'helped' a bit since putting packages there is a bit easier, but issues still persisted.
 * [Leander] I had no bigger issues this week.
 
 
@@ -74,4 +74,5 @@ Overall Goal: Beta release & Integrate Tutorial mode & Have server set up & Docu
 * [Sri]: BE - Set up server
 * [Sri]: BE - Get data base & server fully running
 * [Sri]: BE - Add test cases for server and database
+* [Sri]: BE - Hopefully put all the test code and stuff that I worked on into Unity and try running it from there. 
 
