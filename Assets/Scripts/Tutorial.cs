@@ -15,7 +15,7 @@ public class Tutorial : MonoBehaviour
 
     // Tutorial text
     public PopUp _popUp;
-    public Button _homeButton;
+    public Button _homeButton, _restartButton;
 
     // Messages
     public TextAsset _script;
@@ -60,9 +60,18 @@ public class Tutorial : MonoBehaviour
         // Pause the game to allow reading
         _gameManager.PauseGame(true);
 
+        _restartButton.gameObject.SetActive(false);
+
         _index = 0;
         _popUp._container.SetActive(true);
         Continue();
+    }
+
+    public void EndTutorial()
+    {
+        _gameOption._isTutorial = false;
+        _popUp._container.SetActive(false);
+        _restartButton.gameObject.SetActive(true);
     }
 
     public void Continue()
@@ -70,8 +79,7 @@ public class Tutorial : MonoBehaviour
         // The player decided to still play
         if (_index == _messages.Length)
         {
-            _gameOption.SetTutorial(false);
-            _popUp._container.SetActive(false);
+            EndTutorial();
 
             _gameOption._option.mode = GameOption.Mode.computerBasic;
             Game newGame = _gameOption._option.InitGame();
