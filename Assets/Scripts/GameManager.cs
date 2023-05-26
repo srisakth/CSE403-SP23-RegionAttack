@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
-    public void StartAIGame()
+    public void StartAIGame(int difficulty)
     {
         switch(_gameOption._difficulty)
         {

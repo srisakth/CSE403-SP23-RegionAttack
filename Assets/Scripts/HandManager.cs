@@ -57,7 +57,7 @@ public class HandManager : MonoBehaviour
     {
         foreach (Tile tile in _hand)
         {
-            tile._button.enabled = enable;
+            tile._button.interactable = enable;
         }
     }
 
