@@ -53,6 +53,10 @@ public class Tutorial : MonoBehaviour
         // Pass it to the game Manager
         _gameManager.SetGame(_game);
 
+        // Disable both hands
+        _gameManager._p1Hand.SetEnable(false);
+        _gameManager._p2Hand.SetEnable(false);
+
         // Pause the game to allow reading
         _gameManager.PauseGame(true);
 
@@ -98,9 +102,9 @@ public class Tutorial : MonoBehaviour
 
             foreach (Tile tile in _gameManager._p1Hand._hand)
             {
-                if (tile._num != 3)
+                if (tile._num == 3)
                 {
-                    tile._button.enabled = false;
+                    tile._button.interactable = true;
                 }
             }
         }
@@ -108,6 +112,7 @@ public class Tutorial : MonoBehaviour
         {
             _gameManager._game.p1.numberPool = new List<int>{ 4,11,9,12 };
             _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
+            _gameManager._p1Hand.SetEnable(false);
             _popUp._container.SetActive(true);
         }
         if (_index == 17)
@@ -129,9 +134,9 @@ public class Tutorial : MonoBehaviour
             _popUp._container.SetActive(false);
             foreach(Tile tile in _gameManager._p1Hand._hand)
             {
-                if (tile._num != 12)
+                if (tile._num == 12)
                 {
-                    tile._button.enabled = false;
+                    tile._button.interactable = true;
                 }
             }
         }
@@ -140,6 +145,8 @@ public class Tutorial : MonoBehaviour
             _gameManager._game.p1.numberPool = new List<int> { 4, 11, 9, 8 };
             _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
             _popUp._container.SetActive(true);
+            _gameManager._p1Hand.SetEnable(false);
+
         }
 
         if (_index == 24)

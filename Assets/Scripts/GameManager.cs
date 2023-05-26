@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
-    public void StartAIGame()
+    public void StartAIGame(int difficulty)
     {
         switch(_gameOption._difficulty)
         {
@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
         DisplayHand(_p2Hand, _game.p2);
 
         // Enable/disable the hands
-        _p1Hand.SetEnable(_game.isP1Turn);
+        _p1Hand.SetEnable(_game.isP1Turn && !_gameOption._isTutorial);
         _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._option.IsComputerGame() && !_gameOption._isTutorial);
 
         // Unhighlight the previous tiles

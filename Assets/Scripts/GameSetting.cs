@@ -14,7 +14,7 @@ public class GameSetting : MonoBehaviour
 
     // UI components
     public Toggle _helperToggle;
-    public TMP_Dropdown _dimDropdown, _difficultyDropdown;
+    public TMP_Dropdown _dimDropdown;
 
     // Option possibilities
     public static readonly int[] DimOptions = { 4, 6, 8 };
@@ -42,11 +42,5 @@ public class GameSetting : MonoBehaviour
     public void SetTutorial(bool isTutorial)
     {
         _isTutorial = isTutorial;
-    }
-
-    public void SetDifficulty(int option)
-    {
-        _difficulty = option;
-        _difficultyDropdown.value = option;
     }
 }
