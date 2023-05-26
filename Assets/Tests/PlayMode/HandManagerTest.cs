@@ -13,21 +13,27 @@ public class HandManagerTest
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        var container = new GameObject();
-        container.AddComponent<HandManager>();
-        handManager = container.GetComponent<HandManager>();
-        handManager._parent = container;
+        GameObject gm = new GameObject();
+        gm.AddComponent<GameManager>();
+        GameManager gameManager = gm.GetComponent<GameManager>();
+
         var tilePrefab = new GameObject();
         tilePrefab.AddComponent<Tile>();
         tilePrefab.AddComponent<Button>();
         tilePrefab.AddComponent<TextMeshProUGUI>();
-        handManager._tilePrefab = tilePrefab.GetComponent<Tile>();
-        handManager._tilePrefab._button = tilePrefab.GetComponent<Button>();
-        handManager._tilePrefab._text = tilePrefab.GetComponent<TextMeshProUGUI>();
-        var gm = new GameObject();
-        gm.AddComponent<GameManager>();
-        handManager._gameManager = gm.GetComponent<GameManager>();
-        handManager._isP1 = true;
+        Tile tile = tilePrefab.GetComponent<Tile>();
+        tile._button = tilePrefab.GetComponent<Button>();
+        tile._text = tilePrefab.GetComponent<TextMeshProUGUI>();
+
+        var container = new GameObject();
+        container.AddComponent<GridLayoutGroup>(); 
+        container.AddComponent<HandManager>();
+        handManager = container.GetComponent<HandManager>();
+        handManager._parent = container.GetComponent<GridLayoutGroup>();
+
+        gameManager._p1Hand = handManager;
+
+        handManager.Initialize(tile, true, gameManager);
     }
 
 

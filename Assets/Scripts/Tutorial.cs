@@ -37,16 +37,15 @@ public class Tutorial : MonoBehaviour
     public void StartTutorial()
     {
         // Set the default options
-        _gameOption.SetPlayerMode(false);
-        _gameOption.SetOnlineMode(false);
         _gameOption.SetHelperMode(true);
+        _gameOption.SetTutorial(true);
         _gameOption.SetDimension(1);
 
         // Start a new game
-        _gameManager.StartGame();
+        _gameManager.StartLocalGame();
 
         // Define the tutorial version of the game 
-        _game = new Game(6, false);
+        _game = _gameOption._option.InitGame();
         _game.isP1Turn = true;
         _game.p1.numberPool = new List<int> { 4, 3, 9, 12 };
         _game.p2.numberPool = new List<int> { 1, 7, 5, 8 };
@@ -67,15 +66,16 @@ public class Tutorial : MonoBehaviour
         // The player decided to still play
         if (_index == _messages.Length)
         {
-            _gameOption.SetPlayerMode(true);
             _gameOption.SetTutorial(false);
             _popUp._container.SetActive(false);
 
-            // Instantiate a Computer player
-            Player computer = new ComputerPlayer(1, _game);
-            computer.numberPool = _game.p2.numberPool;
-            _game.p2 = computer;
-            _gameManager.SetGame(_game);
+            _gameOption._option.mode = GameOption.Mode.computerBasic;
+            Game newGame = _gameOption._option.InitGame();
+            newGame.p1.numberPool = _game.p1.numberPool;
+            newGame.p2.numberPool = _game.p2.numberPool;
+            newGame.board = _game.board;
+
+            _gameManager.SetGame(newGame);
             _gameManager._gameTimer.ResetTimer();
 
             return;
