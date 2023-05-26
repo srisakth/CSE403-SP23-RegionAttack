@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
         _gridManager.UpdateGrid(_game.board);
 
         // Set the score
-        _score.SetScore(game.p1.getScore(), game.p2.getScore());
+        _score.SetScore(game.p1.GetScore(), game.p2.GetScore());
 
         EndMove();
     }
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
         _highlightedTiles = null;
 
         _result.SetActive(true);
-        _resultScore.SetScore(_game.p1.getScore(), _game.p2.getScore());
+        _resultScore.SetScore(_game.p1.GetScore(), _game.p2.GetScore());
         _resultText.text = _game.TerminateGame();
     }
 
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
             _gridManager.UpdateGrid(_game.board);
 
             // Update the score
-            _score.SetScore(_game.p1.getScore(), _game.p2.getScore());
+            _score.SetScore(_game.p1.GetScore(), _game.p2.GetScore());
 
             EndMove();
         } else
@@ -309,7 +309,7 @@ public class GameManager : MonoBehaviour
             if (_gameOption._option.IsComputerGame())
             {
                 ComputerPlayer cp = (ComputerPlayer)_game.p2;
-                ((int, int), int) move = cp.findMove();
+                ((int, int), int) move = cp.FindMove();
                 position = move.Item1;
                 num = move.Item2;
             } else

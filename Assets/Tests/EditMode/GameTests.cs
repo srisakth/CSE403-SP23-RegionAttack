@@ -34,7 +34,7 @@ public class GameTests
         }
 
         // Test conflict left, up, right, down (multiple ones)
-        game.resetGameBoard();
+        game.ResetGameBoard();
         for(int i = 0; i < turns.Length; i++){
             game.isP1Turn = turns[i];
             game.board[1,0] = (3,turns[i]);
@@ -48,7 +48,7 @@ public class GameTests
         }
 
         // Test mult/div up, down, left, right (multiple ones) 
-        game.resetGameBoard();
+        game.ResetGameBoard();
         for(int i = 0; i < turns.Length; i++){
             game.isP1Turn = turns[i];
             game.board[1,0] = (3,turns[i]);
@@ -62,7 +62,7 @@ public class GameTests
         }
 
         // Test prime right side
-        game.resetGameBoard();
+        game.ResetGameBoard();
         int[] primes = new int[]{2,3,5,7,11};
         game.isP1Turn = true;
         int boarder = 3; //should be Math.Ceiling(dim/2)
@@ -79,7 +79,7 @@ public class GameTests
         }
 
         // Test prime wrong side
-        game.resetGameBoard();
+        game.ResetGameBoard();
         game.isP1Turn = true;
         for(int i = 0; i < primes.Length; i++){
             int x = random.Next(0,dim);
@@ -108,7 +108,7 @@ public class GameTests
     {
         // Extension rule advances (multiple neighbors)
         Game game = new Game(dim, false);
-        game.resetGameBoard();
+        game.ResetGameBoard();
         game.board[2,0] = (1,true);
         game.board[3,0] = (1,false);
         game.board[4,0] = (1,false);
@@ -135,7 +135,7 @@ public class GameTests
     public void CountScoreTestsBasic() {
         Game game = new Game(dim, false);
         
-        game.resetGameBoard();
+        game.ResetGameBoard();
         game.board[1,1] = (7, false);
         game.board[1,2] = (1, false);
         game.board[1,4] = (1, true);
@@ -148,7 +148,7 @@ public class GameTests
         Assert.AreEqual(3,game.ComputeScore(false));
         Assert.AreEqual(4,game.ComputeScore(true));
 
-        game.resetGameBoard();
+        game.ResetGameBoard();
         game.board[0,0] = (1,false);
         game.board[5,0] = (1,false);
         game.board[2,2] = (2,false);
@@ -168,7 +168,7 @@ public class GameTests
             game.board[poss1[i].Item1,poss1[i].Item2] = (1,false);
         }
         Assert.AreEqual(9,game.ComputeScore(false));
-        game.resetGameBoard();
+        game.ResetGameBoard();
         (int,int)[] poss2 = new (int,int)[] {(0,0),(1,0),(2,0),(3,0),(3,1),(3,2),(2,2),(1,2),(0,2),(0,1)};
         for(int i = 0; i < poss2.Length; i++){
             game.board[poss2[i].Item1,poss2[i].Item2] = (1,false);

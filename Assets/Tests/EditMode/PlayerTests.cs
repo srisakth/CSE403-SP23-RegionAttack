@@ -47,22 +47,22 @@ public class PlayerTests
             List<int> p2nums = new List<int> { 4, 6, 8, 8 };
             for (int i = 0; i < 4; i++)
             {
-                game.p1.removeNum(game.p1.numberPool[0]);
-                game.p2.removeNum(game.p2.numberPool[0]);
+                game.p1.RemoveNum(game.p1.numberPool[0]);
+                game.p2.RemoveNum(game.p2.numberPool[0]);
             }
             for (int i = 0; i < 4; i++)
             {
-                game.p1.addNum(p1nums[i]);
-                game.p2.addNum(random.Next(1,game.getMaxNumber()+1));
+                game.p1.AddNum(p1nums[i]);
+                game.p2.AddNum(random.Next(1,game.GetMaxNumber()+1));
             }
             while (game.p2.PossibleMoves().Count > 0) {
                 for (int i = 0; i < 4; i++)
                 {
-                    game.p2.removeNum(game.p2.numberPool[0]);
+                    game.p2.RemoveNum(game.p2.numberPool[0]);
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    game.p2.addNum(random.Next(1, game.getMaxNumber() + 1));
+                    game.p2.AddNum(random.Next(1, game.GetMaxNumber() + 1));
                 }
             }
             Assert.True(game.p2.PossibleMoves().Count == 0);
