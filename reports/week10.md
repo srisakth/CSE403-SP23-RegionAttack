@@ -31,13 +31,14 @@
 * [Yanick] PM - Prepare release to Play Store is currently getting verified
 * [Yanick] Bug - Expected revision: Included peer review feedback in documentations
 * [Sri] BE - Attempt to set up a database, looked into/contacted CSE server staff about setting up attu or a machine in CSE with a static IP. Also looked into Unity based options. Unity options seemed to be more like a local database for each player storing their own move info rather than a ‘global’ database that could be accessed by any player/device.
+* [Sri] BE - Was not able to make much progress on FireBase proof of concept due to illness, currently working on it on my own branch (sri2-db)
 * [Leander] BE - Clean up of functionality code and adding comments.
 
 #### Issues
 * Overall issues: Server integration canceled & Some video parts to late
 * [Kaede] No major issues that need group resolution.
 * [Yanick] Needed to wait for some parts of the video not delivered on time
-* [Sri] Unable to make connection to AWS database through Unity
+* [Sri] Attempting to make connection to FireBase instance.
 * [Leander] I had no bigger issues this week.
 
 
