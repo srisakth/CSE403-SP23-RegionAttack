@@ -21,3 +21,21 @@ Tasks, if a category applies to them, may start with the prefixes:
   - BE - denoting backend tasks
   - FE - denoting frontend tasks
   - Bug - denoting a Bug (might be migrated to GitHub Issues)
+
+## Contibutions
+This is only a high level overview of the contributions. For details please refer to the weekly status reports of the teams progress in the reports folder
+* Kaede: 
+  * Implemented all frontend functionality
+  * Implemented most of functionality in the intermediary layer between frontend and logic layer
+* Leander:
+  * Implemented all functionality in the logic layer
+  * Test pipeline
+  * Some contributions to code in the intermediary layer
+* Sri:
+  * Tried to implement a server. The implementation is not final and the current code is in branches starting with 'sri' - most of them in 'sri2-db'
+* Yanick:
+  * All project management related work: Creating and assigning tasks, spedcifying exact requirements, most of the work for the submissions, responsible for expected and optional revisions
+  * Created a UI/UX sample
+  * Build settings of project
+  * Set up build pipeline
+  * Created releases on Github and a release in Play Store (which is currently getting verified)
