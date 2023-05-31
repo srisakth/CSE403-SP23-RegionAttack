@@ -1,23 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HandManager : MonoBehaviour
 {
-    public Tile _tilePrefab;
-    public GameManager _gameManager;
-    public GameObject _parent;
+    Tile _tilePrefab;
+    GameManager _gameManager;
+    public GridLayoutGroup _parent;
 
-    public bool _isP1;
+    bool _isP1;
 
     public List<Tile> _hand = new List<Tile>();
+
+    public void Initialize(Tile tilePrefab, bool isP1, GameManager gameManager)
+    {
+        _tilePrefab = tilePrefab;
+        _gameManager = gameManager;
+        _isP1 = isP1;
+    }
 
     public void ClearHand()
     {
         foreach (Tile tile in _hand)
         {
-            GameObject.Destroy(tile.gameObject);
+            Destroy(tile.gameObject);
         }
         _hand.Clear();
         _parent.transform.DetachChildren();
@@ -40,7 +49,7 @@ public class HandManager : MonoBehaviour
         int idx = _hand.IndexOf(tile);
         _hand.RemoveAt(idx);
         tile.transform.SetParent(null);
-        GameObject.Destroy(tile);
+        Destroy(tile);
     }
 
     // Enables or disables the tiles
@@ -48,7 +57,38 @@ public class HandManager : MonoBehaviour
     {
         foreach (Tile tile in _hand)
         {
-            tile._button.enabled = enable;
+            tile._button.interactable = enable;
         }
+    }
+
+    // Set
+    public void SetSize(float min, float max)
+    {
+        float shortEdge, longEdge, cellSize;
+        
+        RectTransform rect = transform.GetComponent<RectTransform>();
+        if (rect.sizeDelta.x > rect.sizeDelta.y)
+        {
+            shortEdge = rect.sizeDelta.y;
+            longEdge = rect.sizeDelta.x;
+        }
+        else
+        {
+            shortEdge = rect.sizeDelta.x;
+            longEdge = rect.sizeDelta.y;
+        }
+
+        if (shortEdge < min)
+            cellSize = min;
+        else if (shortEdge > max)
+            cellSize = max;
+        else
+            cellSize = shortEdge;
+
+        float remaining = Math.Max(longEdge - cellSize * 4, 0);
+
+        
+        _parent.cellSize = Vector2.one * cellSize;
+        _parent.spacing = Vector2.one * remaining / 5;
     }
 }

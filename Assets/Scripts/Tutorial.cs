@@ -15,7 +15,7 @@ public class Tutorial : MonoBehaviour
 
     // Tutorial text
     public PopUp _popUp;
-    public Button _homeButton;
+    public Button _homeButton, _restartButton;
 
     // Messages
     public TextAsset _script;
@@ -37,16 +37,15 @@ public class Tutorial : MonoBehaviour
     public void StartTutorial()
     {
         // Set the default options
-        _gameOption.SetPlayerMode(false);
-        _gameOption.SetOnlineMode(false);
         _gameOption.SetHelperMode(true);
+        _gameOption.SetTutorial(true);
         _gameOption.SetDimension(1);
 
         // Start a new game
-        _gameManager.StartGame();
+        _gameManager.StartLocalGame();
 
         // Define the tutorial version of the game 
-        _game = new Game(6, false);
+        _game = _gameOption._option.InitGame();
         _game.isP1Turn = true;
         _game.p1.numberPool = new List<int> { 4, 3, 9, 12 };
         _game.p2.numberPool = new List<int> { 1, 7, 5, 8 };
@@ -54,12 +53,25 @@ public class Tutorial : MonoBehaviour
         // Pass it to the game Manager
         _gameManager.SetGame(_game);
 
+        // Disable both hands
+        _gameManager._p1Hand.SetEnable(false);
+        _gameManager._p2Hand.SetEnable(false);
+
         // Pause the game to allow reading
         _gameManager.PauseGame(true);
+
+        _restartButton.gameObject.SetActive(false);
 
         _index = 0;
         _popUp._container.SetActive(true);
         Continue();
+    }
+
+    public void EndTutorial()
+    {
+        _gameOption._isTutorial = false;
+        _popUp._container.SetActive(false);
+        _restartButton.gameObject.SetActive(true);
     }
 
     public void Continue()
@@ -67,15 +79,15 @@ public class Tutorial : MonoBehaviour
         // The player decided to still play
         if (_index == _messages.Length)
         {
-            _gameOption.SetPlayerMode(true);
-            _gameOption.SetTutorial(false);
-            _popUp._container.SetActive(false);
+            EndTutorial();
 
-            // Instantiate a Computer player
-            Player computer = new ComputerPlayer(1, _game);
-            computer.numberPool = _game.p2.numberPool;
-            _game.p2 = computer;
-            _gameManager.SetGame(_game);
+            _gameOption._option.mode = GameOption.Mode.computerBasic;
+            Game newGame = _gameOption._option.InitGame();
+            newGame.p1.numberPool = _game.p1.numberPool;
+            newGame.p2.numberPool = _game.p2.numberPool;
+            newGame.board = _game.board;
+
+            _gameManager.SetGame(newGame);
             _gameManager._gameTimer.ResetTimer();
 
             return;
@@ -98,9 +110,9 @@ public class Tutorial : MonoBehaviour
 
             foreach (Tile tile in _gameManager._p1Hand._hand)
             {
-                if (tile._num != 3)
+                if (tile._num == 3)
                 {
-                    tile._button.enabled = false;
+                    tile._button.interactable = true;
                 }
             }
         }
@@ -108,6 +120,7 @@ public class Tutorial : MonoBehaviour
         {
             _gameManager._game.p1.numberPool = new List<int>{ 4,11,9,12 };
             _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
+            _gameManager._p1Hand.SetEnable(false);
             _popUp._container.SetActive(true);
         }
         if (_index == 17)
@@ -129,9 +142,9 @@ public class Tutorial : MonoBehaviour
             _popUp._container.SetActive(false);
             foreach(Tile tile in _gameManager._p1Hand._hand)
             {
-                if (tile._num != 12)
+                if (tile._num == 12)
                 {
-                    tile._button.enabled = false;
+                    tile._button.interactable = true;
                 }
             }
         }
@@ -140,6 +153,8 @@ public class Tutorial : MonoBehaviour
             _gameManager._game.p1.numberPool = new List<int> { 4, 11, 9, 8 };
             _gameManager.DisplayHand(_gameManager._p1Hand, _gameManager._game.p1);
             _popUp._container.SetActive(true);
+            _gameManager._p1Hand.SetEnable(false);
+
         }
 
         if (_index == 24)

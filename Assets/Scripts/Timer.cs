@@ -44,7 +44,7 @@ public class Timer : MonoBehaviour
             int second = remaining % 60;
             _displayText.text = _showMin ? $"{minute:D2} : {second:D2}" : $"{second}";
 
-            if (_timeElapsed > _timeLimit) 
+            if (_timeElapsed >= _timeLimit) 
             {
                 _enabled = false;
                 _timeUpEvent.Invoke();

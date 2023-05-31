@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 
 /*
@@ -28,6 +29,8 @@ public class GameManager : MonoBehaviour
 
     public Tutorial _tutorial;
 
+    public Tile _tilePrefab;
+
     // Selected tiles
     // Although it's not really good to pass these to the game manager, it's easier to deal with nullable objects
     // to check for selection.
@@ -36,12 +39,65 @@ public class GameManager : MonoBehaviour
 
     private WaitForSeconds _wait = new WaitForSeconds(1.5f);
 
+    private void Awake()
+    {
+        if (_p1Hand != null)
+            _p1Hand.Initialize(_tilePrefab, true, this);
+        else
+            print("P1 Hand Manager not selected");
+
+        if (_p2Hand != null)
+            _p2Hand.Initialize(_tilePrefab, false, this);
+        else
+            print("P2 Hand Manager not selected");
+
+        if (_gridManager != null)
+            _gridManager.Initialize(_tilePrefab, this);
+        else
+            print("Grid Manager not selected");
+
+    }
+
+    public void StartOnlineGame()
+    {
+        _gameOption._option.mode = GameOption.Mode.online;
+        StartGame();
+    }
+
+    public void StartLocalGame()
+    {
+        _gameOption._option.mode = GameOption.Mode.local;
+        StartGame();
+    }
+
+    public void StartAIGame(int difficulty)
+    {
+        switch(_gameOption._difficulty)
+        {
+            case 0:
+                _gameOption._option.mode = GameOption.Mode.computerBasic;
+                break;
+            case 1:
+                _gameOption._option.mode = GameOption.Mode.computerAdvanced;
+                break;
+            default:
+                _gameOption._option.mode = GameOption.Mode.computerBasic;
+                break;
+        }
+
+        StartGame();
+    }
+
     // Starts the game by removing any previous GameObjects, instantiating a new game with the given
     // Game options, and passing it to the GridManager and HandManagers to be displayed.
-    public void StartGame()
+    void StartGame()
     {
         // Initialize the board tiles
-        _gridManager.Initialize(_gameOption._dim);
+        _gridManager.InitializeGrid(_gameOption._option.dim);
+
+        Vector2 cellSize = _gridManager.GetComponent<GridLayoutGroup>().cellSize;
+        _p1Hand.SetSize(cellSize.x * 0.4f, cellSize.x);
+        _p2Hand.SetSize(cellSize.x * 0.4f, cellSize.x);
 
         // Start the game
         RestartGame();
@@ -57,7 +113,7 @@ public class GameManager : MonoBehaviour
         _gridManager.UpdateGrid(_game.board);
 
         // Set the score
-        _score.SetScore(game.p1.getScore(), game.p2.getScore());
+        _score.SetScore(game.p1.GetScore(), game.p2.GetScore());
 
         EndMove();
     }
@@ -68,11 +124,11 @@ public class GameManager : MonoBehaviour
     {
         // Turn off the results page
         _result.SetActive(false);
-        
+                
         // Make a new game
-        _game = new Game(_gameOption._dim, _gameOption._isOpponentAI);
+        _game = _gameOption._option.InitGame();
 
-        if (_gameOption._isOnline)
+        if (_gameOption._option.IsOnlineGame())
         {
             // TODO: Fetch the board and hand state
         }
@@ -125,7 +181,7 @@ public class GameManager : MonoBehaviour
         _highlightedTiles = null;
 
         _result.SetActive(true);
-        _resultScore.SetScore(_game.p1.getScore(), _game.p2.getScore());
+        _resultScore.SetScore(_game.p1.GetScore(), _game.p2.GetScore());
         _resultText.text = _game.TerminateGame();
     }
 
@@ -162,7 +218,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator MakeMove((int, int) position, int num)
     {
         // If it's P2's turn and it's AI, then pause for a bit
-        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isTutorial))
+        if (!_game.isP1Turn && (_gameOption._option.IsComputerGame() || _gameOption._isTutorial))
             yield return _wait;
 
         int res = _game.MakeMove(position, num);
@@ -172,7 +228,7 @@ public class GameManager : MonoBehaviour
             _gridManager.UpdateGrid(_game.board);
 
             // Update the score
-            _score.SetScore(_game.p1.getScore(), _game.p2.getScore());
+            _score.SetScore(_game.p1.GetScore(), _game.p2.GetScore());
 
             EndMove();
         } else
@@ -226,8 +282,8 @@ public class GameManager : MonoBehaviour
         DisplayHand(_p2Hand, _game.p2);
 
         // Enable/disable the hands
-        _p1Hand.SetEnable(_game.isP1Turn);
-        _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._isOpponentAI && !_gameOption._isTutorial);
+        _p1Hand.SetEnable(_game.isP1Turn && !_gameOption._isTutorial);
+        _p2Hand.SetEnable(!_game.isP1Turn && !_gameOption._option.IsComputerGame() && !_gameOption._isTutorial);
 
         // Unhighlight the previous tiles
         if (_gameOption._enableHelper && _highlightedTiles != null)
@@ -237,21 +293,23 @@ public class GameManager : MonoBehaviour
         if (!_gameOption._isTutorial)
             _moveTimer.ResetTimer();
 
-        _moveTimer.transform.rotation = _game.isP1Turn || _gameOption._isOpponentAI ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
+        bool isUpright = _game.isP1Turn || _gameOption._option.IsComputerGame() || (Screen.width > Screen.height);
+
+        _moveTimer.transform.rotation = isUpright ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
 
         _boardTile = null;
         _numTile = null;
         _highlightedTiles = null;
 
         // If it's p2's turn and it's computer or online, then we need to fetch the move
-        if (!_game.isP1Turn && (_gameOption._isOpponentAI || _gameOption._isOnline))
+        if (!_game.isP1Turn && (_gameOption._option.IsComputerGame() || _gameOption._option.IsOnlineGame()))
         {
             (int, int) position = (-1, -1);
             int num = 0;
-            if (_gameOption._isOpponentAI)
+            if (_gameOption._option.IsComputerGame())
             {
                 ComputerPlayer cp = (ComputerPlayer)_game.p2;
-                ((int, int), int) move = cp.findMove();
+                ((int, int), int) move = cp.FindMove();
                 position = move.Item1;
                 num = move.Item2;
             } else

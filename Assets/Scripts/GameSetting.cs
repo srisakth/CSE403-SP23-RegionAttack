@@ -7,27 +7,25 @@ using TMPro;
 public class GameSetting : MonoBehaviour
 {
     // Options
-    public bool _isOpponentAI = false;
-    public bool _isOnline = false;
     public bool _enableHelper = false;
     public bool _isTutorial = false;
-    public int _dim = 6;
+    public GameOption _option;
+    public int _difficulty = 0;
 
     // UI components
-    public Toggle _AIToggle, _onlineToggle, _helperToggle;
+    public Toggle _helperToggle;
     public TMP_Dropdown _dimDropdown;
-
 
     // Option possibilities
     public static readonly int[] DimOptions = { 4, 6, 8 };
 
-    // **** Game Mode extraction ****
-
-    public void SetPlayerMode(bool isOpponentAI)
+    private void Awake()
     {
-        _isOpponentAI = isOpponentAI;
-        _AIToggle.isOn = isOpponentAI;
+        _option = new GameOption(6, true, GameOption.Mode.local);
     }
+
+
+    // **** Game Mode extraction ****
 
     public void SetHelperMode(bool enableHelper)
     {
@@ -35,15 +33,9 @@ public class GameSetting : MonoBehaviour
         _helperToggle.isOn = enableHelper;
     }
 
-    public void SetOnlineMode(bool isOnline)
-    {
-        _isOnline  = isOnline;
-        _onlineToggle.isOn = isOnline;
-    }
-
     public void SetDimension(int option)
     {
-        _dim = DimOptions[option];
+        _option.dim = DimOptions[option];
         _dimDropdown.value = option;
     }
 
