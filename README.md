@@ -1,7 +1,17 @@
 # CSE403-SP23-RegionAttack
 ## Documentations
-- [User Documentation](https://docs.google.com/document/d/1DH6M84srZDcjmnG6moEJAbBe9ikrCvG0c3ezxBntuCw/edit#): Find all relevant inforamtion for getting started with working on this project.
-- [Developer Documentation](https://docs.google.com/document/d/11R98xWkRZ4r5YVof91nbMWEalpB5O88g-nbGZ-bJyGc/edit?usp=sharing): Find all relevant inforamtion to use this project.
+- [User Documentation](https://docs.google.com/document/d/1DH6M84srZDcjmnG6moEJAbBe9ikrCvG0c3ezxBntuCw/edit#): Contains the following information:
+  * High level overview over the app
+  * Installation guidelines
+  * Instructions for using the app
+  * Instructions for issuing a bug report
+- [Developer Documentation](https://docs.google.com/document/d/11R98xWkRZ4r5YVof91nbMWEalpB5O88g-nbGZ-bJyGc/edit?usp=sharing): Contains the following information:
+  * Project Setup
+  * Source code structure
+  * Instructions for building the system
+  * Instructions for building a release of the system
+  * Instructions for running the system
+  * Instructions for testing the system
 
 ## Idea
 
@@ -31,8 +41,6 @@ Here you will find a list of usecases for our application. Alongside with them y
 - UC1: Play with friend in-person - Is fully working. Once the system is running two players can play a local game on the device it is running on.
 - UC2: Play against Computer - Is fully working. Once the system is running a single player can play against a computer version. Note however that this computer player is following very simple rules.
 - UC3: Learn the game - Is fully working. A tutorial mode for the game is available as another game mode.
-- UC4: Play with a friend online - Currently further implementing the online mode is blocked by server setup.
+- UC4: Play with a friend online - Not developed yet, current progress is on branches starting with 'sri' most of them in sri2-db
 - UC5: Add a friend online - Same progress as for UC4.
 - UC6: Find a random Opponent - Same progress as for UC5.
-
-Use Cases 4-6  were not developed. development of the server for these use cases was hindered, and any progress made exists on branchs starting with 'sri'. Most progress made is on branch "sri2-db".
