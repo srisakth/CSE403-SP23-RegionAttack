@@ -34,3 +34,5 @@ Here you will find a list of usecases for our application. Alongside with them y
 - UC4: Play with a friend online - Currently further implementing the online mode is blocked by server setup.
 - UC5: Add a friend online - Same progress as for UC4.
 - UC6: Find a random Opponent - Same progress as for UC5.
+
+Use Cases 4-6  were not developed. development of the server for these use cases was hindered, and any progress made exists on branchs starting with 'sri'. Most progress made is on branch "sri2-db".
